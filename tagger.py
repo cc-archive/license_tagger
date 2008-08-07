@@ -1,3 +1,22 @@
+#! /usr/bin/env python
+# Creative Commons has made the contents of this file
+# available under a CC-GNU-LGPL license:
+#
+# http://creativecommons.org/licenses/LGPL/2.1/
+#
+# A copy of the full license can be found as part of this
+# distribution in the file COPYING.
+# 
+# You may use the liblicense software in accordance with the
+# terms of that license. You agree that you are solely 
+# responsible for your use of the liblicense software and you
+# represent and warrant to Creative Commons that your use
+# of the liblicense software will comply with the CC-GNU-LGPL.
+#
+# Copyright 2008, Creative Commons, www.creativecommons.org.
+# Copyright 2008, Steren Giannini
+# Copyright 2007, Scott Shawcroft. (portion of this code is based on Scott work)
+
 import wx
 import os.path
 import sys
@@ -232,6 +251,7 @@ class MainWindow(wx.Frame):
 #---------------------------------------------------------------------------
 
 class LicenseChooser(wx.Frame):
+
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, -1, 'Choose your license')
 
@@ -276,22 +296,52 @@ class LicenseChooser(wx.Frame):
         licenseURILine.Add(wx.TextCtrl(self, -1, self.licenseURI),3,wx.EXPAND)
 
         #Apply
-        buttonLine = wx.BoxSizer(wx.HORIZONTAL)
         applybtn=wx.Button(self, wx.ID_APPLY)
         applybtn.Bind(wx.EVT_BUTTON, self.OnApply)
-        buttonLine.Add(applybtn)
 
         sizer=wx.BoxSizer(wx.VERTICAL)  
         sizer.AddMany([ byLine, ashLine, arLine,
                             pcwLine, saLine, licenseNameLine, 
-                            licenseURILine, buttonLine ])
+                            licenseURILine ])
+        sizer.Add(applybtn)
         self.SetSizer(sizer)
 
+        #We define the attributes URI        
+        self.attributes = ["http://creativecommons.org/ns#Attribution",
+              "http://creativecommons.org/ns#Distribution",
+              "http://creativecommons.org/ns#DerivativeWorks",
+              "http://creativecommons.org/ns#CommercialUse",
+              "http://creativecommons.org/ns#ShareAlike"] 
+
     def OnApply(self, event):
-        pass
+        self.Destroy()
 
     def OnCloseWindow(self, event):
         self.Destroy()
+
+    def update_checkboxes(self,license):
+        if license:
+            self.current_flags= list(self.license_flags(license))
+        else:
+            self.current_flags=[False,False,False,False,False]
+        self.cb_by.SetValue(self.current_flags[0])
+        self.cb_ash.SetValue(self.current_flags[1])
+        self.cb_ar.SetValue(self.current_flags[2])
+        self.cb_pcw.set_active(self.current_flags[3])
+        self.cb_sa.set_active(self.current_flags[4])
+
+    def license_flags(self,license):
+        """
+        Returns the CC flags of a given license. (compares attributes to permits/requires/prohibits)
+        """
+        permits = liblicense.get_permits(license)
+        requires = liblicense.get_requires(license)
+        prohibits = liblicense.get_prohibits(license)
+        return (attributes[0] in requires,
+                attributes[1] in permits,
+                attributes[2] in permits,
+                attributes[3] in prohibits,
+                attributes[4] in requires)
 
 #---------------------------------------------------------------------------
 
