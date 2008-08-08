@@ -47,6 +47,7 @@ class MainWindow(wx.Frame):
 
         self.CreateExteriorWindowComponents()
         self.CreateInteriorWindowComponents()
+        #TODO
         #for drag and drop http://docs.wxwidgets.org/trunk/overview_dnd.html and DragAndDrop.py
         #self.SetDropTarget(dt)
 
@@ -76,35 +77,36 @@ class MainWindow(wx.Frame):
         self.sizer.Add(buttonsbox,-1,wx.EXPAND)
 
     def CreateLicenseInfo(self):
-        self.licenseInfoBox = wx.BoxSizer(wx.VERTICAL)
+        licenseInfoBox = wx.BoxSizer(wx.VERTICAL)
 
-        self.licenseInfoBox.Add(wx.StaticText(self, -1, self.filename),-1,wx.EXPAND)
+        self.fileNameText = wx.StaticText(self, -1, self.filename)
+        licenseInfoBox.Add(self.fileNameText,-1,wx.EXPAND)
 
-        self.licenseCell = wx.BoxSizer(wx.HORIZONTAL)
+        licenseCell = wx.BoxSizer(wx.HORIZONTAL)
         self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
-        self.licenseCell.Add(self.licenseText,3,wx.EXPAND)
+        licenseCell.Add(self.licenseText,3,wx.EXPAND)
         self.editLicense=wx.Button(self, wx.ID_EDIT)
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
-        self.licenseCell.Add(self.editLicense,1,wx.EXPAND)
+        licenseCell.Add(self.editLicense,1,wx.EXPAND)
 
-        self.licenseLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.licenseLine.Add(wx.StaticText(self, -1, "License: "),1,wx.EXPAND)
-        self.licenseLine.Add(self.licenseCell,2,wx.EXPAND)        
+        licenseLine = wx.BoxSizer(wx.HORIZONTAL)
+        licenseLine.Add(wx.StaticText(self, -1, "License: "),1,wx.EXPAND)
+        licenseLine.Add(licenseCell,2,wx.EXPAND)        
 
-        self.licenseInfoBox.Add(self.licenseLine,-1,wx.EXPAND)
+        licenseInfoBox.Add(licenseLine,-1,wx.EXPAND)
 
-        self.titleLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.titleLine.Add(wx.StaticText(self, -1, "Title: "),1,wx.EXPAND)
+        titleLine = wx.BoxSizer(wx.HORIZONTAL)
+        titleLine.Add(wx.StaticText(self, -1, "Title: "),1,wx.EXPAND)
         self.titleText = wx.TextCtrl(self, -1, self.title)
-        self.titleLine.Add(self.titleText,2,wx.EXPAND)
-        self.licenseInfoBox.Add(self.titleLine,0,wx.EXPAND)
+        titleLine.Add(self.titleText,2,wx.EXPAND)
+        licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
-        self.authorLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.authorLine.Add(wx.StaticText(self, -1, "Author: "),1,wx.EXPAND)
+        authorLine = wx.BoxSizer(wx.HORIZONTAL)
+        authorLine.Add(wx.StaticText(self, -1, "Author: "),1,wx.EXPAND)
         self.authorText = wx.TextCtrl(self, -1, self.author)
-        self.authorLine.Add(self.authorText,2,wx.EXPAND)
-        self.licenseInfoBox.Add(self.authorLine,0,wx.EXPAND)
-        self.sizer.Add(self.licenseInfoBox,0,wx.EXPAND)
+        authorLine.Add(self.authorText,2,wx.EXPAND)
+        licenseInfoBox.Add(authorLine,0,wx.EXPAND)
+        self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
 
     def CreateExteriorWindowComponents(self):
         self.CreateMenu()
@@ -145,9 +147,10 @@ class MainWindow(wx.Frame):
         super(MainWindow, self).SetTitle(title)
 
     def UpdateLicenseBox(self):
-        self.licenseText.SetLabel(self.license)
-        self.titleText.SetValue(self.title)
-        self.authorText.SetValue(self.author)
+        self.fileNameText.SetLabel("Editing license metadata for " + self.filename)
+        self.licenseText.SetLabel(self.GetLicenseName())
+        #self.titleText.SetValue(self.title)
+        #self.authorText.SetValue(self.author)
 
     def defaultFileDialogOptions(self):
         ''' Return a dictionary with file dialog options that can be
@@ -197,6 +200,7 @@ class MainWindow(wx.Frame):
 
     def OnSave(self, event):
         self.WriteLicenseData()
+        self.UpdateLicenseBox()
 
     def OnSaveAs(self, event):
         if self.askUserForFilename(defaultFile=self.filename, style=wx.SAVE,
@@ -214,7 +218,7 @@ class MainWindow(wx.Frame):
     def OnOpen(self, event):
         if self.askUserForFilename(style=wx.OPEN,
                                    **self.defaultFileDialogOptions()):
-            #self.ReadInfo()
+            self.ReadInfo()
             #self.title = self.license
             #self.author = self.license
             self.UpdateLicenseBox()
@@ -237,8 +241,9 @@ class MainWindow(wx.Frame):
             if self.license == None:
                 return '(unlicensed)'
             elif liblicense.get_name(self.license) != None:
+                return liblicense.get_name(self.license)
+            else :
                 return self.license
-            return self.license
 
     def WriteLicenseData(self):
         liblicense.write(os.path.join(self.dirname, self.filename), 
@@ -249,7 +254,8 @@ class MainWindow(wx.Frame):
     
 
 #---------------------------------------------------------------------------
-
+#TODO
+#the best may be to use wx.Dialog and to get the result code with GetReturnCode (), check Dialog.py
 class LicenseChooser(wx.Frame):
 
     def __init__(self, parent):
@@ -275,6 +281,7 @@ class LicenseChooser(wx.Frame):
         arLine = wx.BoxSizer(wx.HORIZONTAL)
         self.cb_ar = wx.CheckBox(self, -1, "Allow Remixing")
         arLine.Add(self.cb_ar,1,wx.EXPAND)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnApply, self.cb_ar )
 
         #Prohibit Commercial Works
         pcwLine = wx.BoxSizer(wx.HORIZONTAL)
@@ -327,6 +334,7 @@ class LicenseChooser(wx.Frame):
         self.cb_by.SetValue(self.current_flags[0])
         self.cb_ash.SetValue(self.current_flags[1])
         self.cb_ar.SetValue(self.current_flags[2])
+        self.cb_ar.Enable(True)
         self.cb_pcw.set_active(self.current_flags[3])
         self.cb_sa.set_active(self.current_flags[4])
 
@@ -337,11 +345,20 @@ class LicenseChooser(wx.Frame):
         permits = liblicense.get_permits(license)
         requires = liblicense.get_requires(license)
         prohibits = liblicense.get_prohibits(license)
-        return (attributes[0] in requires,
-                attributes[1] in permits,
-                attributes[2] in permits,
-                attributes[3] in prohibits,
-                attributes[4] in requires)
+        return (self.attributes[0] in requires,
+                self.attributes[1] in permits,
+                self.attributes[2] in permits,
+                self.attributes[3] in prohibits,
+                self.attributes[4] in requires)
+
+    def ArToggled(self):
+        """
+        If "Allow Remixing" is false, then no "Share Alike" question.
+        """
+        if self.cb_ar.GetValue == False:
+            self.cb_sa.Enable(False)
+        else :
+            self.cb_sa.Enable(True)
 
 #---------------------------------------------------------------------------
 
