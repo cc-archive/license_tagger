@@ -24,6 +24,8 @@ from wx.lib.wordwrap import wordwrap
 
 import liblicense
 
+import chooser
+
 #TODO : handle license
 publisherlicenseText = "GNUGPL v2 or later"
 
@@ -31,19 +33,29 @@ if len(sys.argv) > 1:
     filepath = sys.argv[1]
     statusMessage = ""
 else :
+    filepath = False
     statusMessage = "Open or drag-and-drop a file"
-
 
 class MainWindow(wx.Frame):
     def __init__(self):
         super(MainWindow, self).__init__(None, size=(500,250))
         self.programname = 'License Tagger'
-        self.dirname = '.'
-        self.filename = ''
-
-        self.license = None
-        self.author = ''
-        self.title = ''
+        
+        #for parameter, we split the filepath into dirname and filename
+        if filepath :
+            pathsplit = os.path.split(filepath)
+            self.dirname = pathsplit[0]
+            self.filename = pathsplit[1]
+            self.license = liblicense.read(filepath)
+            #TODO remove the 2 folowing lines when ReadInfo is totally OK                   
+            self.author = ''
+            self.title = ''
+        else :
+            self.dirname = '.'
+            self.filename = ''
+            self.license = None
+            self.author = ''
+            self.title = ''
 
         self.CreateExteriorWindowComponents()
         self.CreateInteriorWindowComponents()
@@ -98,15 +110,23 @@ class MainWindow(wx.Frame):
         titleLine = wx.BoxSizer(wx.HORIZONTAL)
         titleLine.Add(wx.StaticText(self, -1, "Title: "),1,wx.EXPAND)
         self.titleText = wx.TextCtrl(self, -1, self.title)
+        #TODO: remove this line when title metadata works:
+        self.titleText.Enable(False)
+        #
         titleLine.Add(self.titleText,2,wx.EXPAND)
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
         authorLine.Add(wx.StaticText(self, -1, "Author: "),1,wx.EXPAND)
         self.authorText = wx.TextCtrl(self, -1, self.author)
+        #TODO: remove this line when title metadata works:
+        self.authorText.Enable(False)
+        #        
         authorLine.Add(self.authorText,2,wx.EXPAND)
         licenseInfoBox.Add(authorLine,0,wx.EXPAND)
         self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
+
+
 
     def CreateExteriorWindowComponents(self):
         self.CreateMenu()
@@ -147,7 +167,7 @@ class MainWindow(wx.Frame):
         super(MainWindow, self).SetTitle(title)
 
     def UpdateLicenseBox(self):
-        self.fileNameText.SetLabel("Editing license metadata for " + self.filename)
+        self.fileNameText.SetLabel(self.filename)
         self.licenseText.SetLabel(self.GetLicenseName())
         #self.titleText.SetValue(self.title)
         #self.authorText.SetValue(self.author)
@@ -208,8 +228,13 @@ class MainWindow(wx.Frame):
             self.OnSave(event)
 
     def OnEdit(self, event):
-        win = LicenseChooser(self)
-        win.Show(True)
+        win = chooser.LicenseChooser(self)
+        win.CenterOnScreen()
+        win.Show()
+        #if (win.ShowModal() == wx.ID_OK):
+        win.ShowModal()        
+        newLicense = win.GetNewLicense()
+        print newLicense
 
     #TODO remove============
     #def OnTest(self, event):
@@ -226,6 +251,7 @@ class MainWindow(wx.Frame):
 
     def ReadInfo(self):
         self.license = liblicense.read(os.path.join(self.dirname, self.filename))
+        print "readinfo:" + self.license
 
     def GetLicenseName(self):
         """
@@ -246,121 +272,12 @@ class MainWindow(wx.Frame):
                 return self.license
 
     def WriteLicenseData(self):
-        liblicense.write(os.path.join(self.dirname, self.filename), 
-                         "http://purl.org/dc/elements/1.1/title", 
-                         self.title)
+        #TODO: when liblicense actually works for creator and title : do it        
+        #liblicense.write(os.path.join(self.dirname, self.filename), 
+        #                 "http://purl.org/dc/elements/1.1/title", 
+        #                 self.title)
         liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE,
                          self.license)
-    
-
-#---------------------------------------------------------------------------
-#TODO
-#the best may be to use wx.Dialog and to get the result code with GetReturnCode (), check Dialog.py
-class LicenseChooser(wx.Frame):
-
-    def __init__(self, parent):
-        wx.Frame.__init__(self, parent, -1, 'Choose your license')
-
-        self.licenseName = "license temp"
-        self.licenseURI = "http://temp"
-
-        self.SetSize((400, 200))
-        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-
-        #Attribution
-        byLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_by = wx.CheckBox(self, -1, "Require Attribution")
-        byLine.Add(self.cb_by,1,wx.EXPAND)
-
-        #Sharing
-        ashLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_ash = wx.CheckBox(self, -1, "Allow Sharing")
-        ashLine.Add(self.cb_ash,1,wx.EXPAND)
-
-        #Remixing
-        arLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_ar = wx.CheckBox(self, -1, "Allow Remixing")
-        arLine.Add(self.cb_ar,1,wx.EXPAND)
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnApply, self.cb_ar )
-
-        #Prohibit Commercial Works
-        pcwLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_pcw = wx.CheckBox(self, -1, "Prohibit Commercial Works")
-        pcwLine.Add(self.cb_pcw,1,wx.EXPAND)
-
-        #Share Alike
-        saLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_sa = wx.CheckBox(self, -1, "Require Others to Share-Alike")
-        saLine.Add(self.cb_sa,1,wx.EXPAND)
-
-        #License name and URI
-        licenseNameLine = wx.BoxSizer(wx.HORIZONTAL)
-        licenseNameLine.Add(wx.StaticText(self, -1, "License:"),1,wx.EXPAND)
-        licenseNameLine.Add(wx.TextCtrl(self, -1, self.licenseName),3,wx.EXPAND)
-
-        licenseURILine = wx.BoxSizer(wx.HORIZONTAL)
-        licenseURILine.Add(wx.StaticText(self, -1, "URI:"),1,wx.EXPAND)
-        licenseURILine.Add(wx.TextCtrl(self, -1, self.licenseURI),3,wx.EXPAND)
-
-        #Apply
-        applybtn=wx.Button(self, wx.ID_APPLY)
-        applybtn.Bind(wx.EVT_BUTTON, self.OnApply)
-
-        sizer=wx.BoxSizer(wx.VERTICAL)  
-        sizer.AddMany([ byLine, ashLine, arLine,
-                            pcwLine, saLine, licenseNameLine, 
-                            licenseURILine ])
-        sizer.Add(applybtn)
-        self.SetSizer(sizer)
-
-        #We define the attributes URI        
-        self.attributes = ["http://creativecommons.org/ns#Attribution",
-              "http://creativecommons.org/ns#Distribution",
-              "http://creativecommons.org/ns#DerivativeWorks",
-              "http://creativecommons.org/ns#CommercialUse",
-              "http://creativecommons.org/ns#ShareAlike"] 
-
-    def OnApply(self, event):
-        self.Destroy()
-
-    def OnCloseWindow(self, event):
-        self.Destroy()
-
-    def update_checkboxes(self,license):
-        if license:
-            self.current_flags= list(self.license_flags(license))
-        else:
-            self.current_flags=[False,False,False,False,False]
-        self.cb_by.SetValue(self.current_flags[0])
-        self.cb_ash.SetValue(self.current_flags[1])
-        self.cb_ar.SetValue(self.current_flags[2])
-        self.cb_ar.Enable(True)
-        self.cb_pcw.set_active(self.current_flags[3])
-        self.cb_sa.set_active(self.current_flags[4])
-
-    def license_flags(self,license):
-        """
-        Returns the CC flags of a given license. (compares attributes to permits/requires/prohibits)
-        """
-        permits = liblicense.get_permits(license)
-        requires = liblicense.get_requires(license)
-        prohibits = liblicense.get_prohibits(license)
-        return (self.attributes[0] in requires,
-                self.attributes[1] in permits,
-                self.attributes[2] in permits,
-                self.attributes[3] in prohibits,
-                self.attributes[4] in requires)
-
-    def ArToggled(self):
-        """
-        If "Allow Remixing" is false, then no "Share Alike" question.
-        """
-        if self.cb_ar.GetValue == False:
-            self.cb_sa.Enable(False)
-        else :
-            self.cb_sa.Enable(True)
-
-#---------------------------------------------------------------------------
 
 app = wx.App()
 frame = MainWindow()
