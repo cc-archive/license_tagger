@@ -15,7 +15,6 @@
 #
 # Copyright 2008, Creative Commons, www.creativecommons.org.
 # Copyright 2008, Steren Giannini
-# Copyright 2007, Scott Shawcroft. (portion of this code is based on Scott work)
 
 import wx
 import os.path
@@ -29,31 +28,47 @@ import chooser
 #TODO : handle license
 publisherlicenseText = "GNUGPL v2 or later"
 
-if len(sys.argv) > 1:
-    filepath = sys.argv[1]
-    statusMessage = ""
-else :
-    filepath = False
-    statusMessage = "Open or drag-and-drop a file"
+class License():
+    def __init__(self):
+        self.license = None
+    def SetLicense(self, license):
+        self.license = license        
+    def GetLicense(self):
+        return self.license
+    def GetLicenseName(self):
+        """
+        This method returns:
+        - the license name if possible
+        - the license url if the name can't be found
+        - (unlicensed) if no license info
+        """
+        if self.GetLicense() == None:
+            return '(unlicensed)'
+        elif liblicense.get_name(self.GetLicense()) != None:
+            return liblicense.get_name(self.GetLicense())
+        else :
+            return self.GetLicense()
+
 
 class MainWindow(wx.Frame):
-    def __init__(self):
+    def __init__(self, license):
         super(MainWindow, self).__init__(None, size=(500,250))
         self.programname = 'License Tagger'
-        
+        self.license = license       
+
         #for parameter, we split the filepath into dirname and filename
         if filepath :
             pathsplit = os.path.split(filepath)
             self.dirname = pathsplit[0]
             self.filename = pathsplit[1]
-            self.license = liblicense.read(filepath)
+            self.license.SetLicense(liblicense.read(filepath))
             #TODO remove the 2 folowing lines when ReadInfo is totally OK                   
             self.author = ''
             self.title = ''
         else :
             self.dirname = '.'
             self.filename = ''
-            self.license = None
+            self.license.SetLicense(None)
             self.author = ''
             self.title = ''
 
@@ -228,13 +243,11 @@ class MainWindow(wx.Frame):
             self.OnSave(event)
 
     def OnEdit(self, event):
-        win = chooser.LicenseChooser(self)
+        win = chooser.LicenseChooser(self, license = self.license)
         win.CenterOnScreen()
         win.Show()
-        #if (win.ShowModal() == wx.ID_OK):
-        win.ShowModal()        
-        newLicense = win.GetNewLicense()
-        print newLicense
+        win.ShowModal()
+        self.UpdateLicenseBox()
 
     #TODO remove============
     #def OnTest(self, event):
@@ -250,8 +263,7 @@ class MainWindow(wx.Frame):
             self.SetStatusText("")
 
     def ReadInfo(self):
-        self.license = liblicense.read(os.path.join(self.dirname, self.filename))
-        print "readinfo:" + self.license
+        self.license.SetLicense(liblicense.read(os.path.join(self.dirname, self.filename)))
 
     def GetLicenseName(self):
         """
@@ -264,12 +276,7 @@ class MainWindow(wx.Frame):
         if self.filename == '':
             return ''
         else :
-            if self.license == None:
-                return '(unlicensed)'
-            elif liblicense.get_name(self.license) != None:
-                return liblicense.get_name(self.license)
-            else :
-                return self.license
+            return self.license.GetLicenseName()
 
     def WriteLicenseData(self):
         #TODO: when liblicense actually works for creator and title : do it        
@@ -277,10 +284,19 @@ class MainWindow(wx.Frame):
         #                 "http://purl.org/dc/elements/1.1/title", 
         #                 self.title)
         liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE,
-                         self.license)
+                         self.license.GetLicense())
+
+if len(sys.argv) > 1:
+    filepath = sys.argv[1]
+    statusMessage = ""
+else :
+    filepath = False
+    statusMessage = "Open or drag-and-drop a file"
+
+license = License()
 
 app = wx.App()
-frame = MainWindow()
+frame = MainWindow(license)
 frame.Show()
 app.MainLoop()
 
