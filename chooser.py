@@ -185,8 +185,6 @@ class LicenseChooser(wx.Dialog):
         self.licenseNameText.SetValue(self.licenseName)
 
     def UpdateLicenseURI(self):
-        print 'update uri'   
-
         #These are integers
         permits = 0
         requires = 0

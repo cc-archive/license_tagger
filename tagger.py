@@ -113,6 +113,7 @@ class MainWindow(wx.Frame):
         licenseCell.Add(self.licenseText,3,wx.EXPAND)
         self.editLicense=wx.Button(self, wx.ID_EDIT)
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
+        self.editLicense.Enable(False)
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
 
         licenseLine = wx.BoxSizer(wx.HORIZONTAL)
@@ -183,6 +184,10 @@ class MainWindow(wx.Frame):
     def UpdateLicenseBox(self):
         self.fileNameText.SetLabel(self.filename)
         self.licenseText.SetLabel(self.GetLicenseName())
+        if self.filename :
+            self.editLicense.Enable(True)
+        else :
+            self.editLicense.Enable(False)
         #self.titleText.SetValue(self.title)
         #self.authorText.SetValue(self.author)
 
