@@ -224,7 +224,7 @@ class MainWindow(wx.Frame):
             "sanity test to make sure that a language's compiler, development "
             "environment, and run-time environment are correctly installed.",
             350, wx.ClientDC(self))
-        info.WebSite = ("http://www.creativecommons.org", self.programname + " home page")
+        info.WebSite = ("http://wiki.creativecommons.org/License_tagger", self.programname + " home page")
         info.Developers = [ "Steren Giannini" ]
         info.License = wordwrap(publisherlicenseText, 500, wx.ClientDC(self))
         # Then we call wx.AboutBox giving it that info object
