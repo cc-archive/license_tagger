@@ -76,9 +76,9 @@ class LicenseChooser(wx.Dialog):
         #License name and URI
         licenseNameLine = wx.BoxSizer(wx.HORIZONTAL)
         licenseNameLine.Add(wx.StaticText(self, -1, "License:"),1,wx.EXPAND)
-        licenseNameText = wx.TextCtrl(self, -1, self.licenseName)
-        licenseNameText.Enable(False)
-        licenseNameLine.Add(licenseNameText,3,wx.EXPAND)
+        self.licenseNameText = wx.TextCtrl(self, -1, self.licenseName)
+        self.licenseNameText.Enable(False)
+        licenseNameLine.Add(self.licenseNameText,3,wx.EXPAND)
         
         licenseURILine = wx.BoxSizer(wx.HORIZONTAL)
         licenseURILine.Add(wx.StaticText(self, -1, "URI:"),1,wx.EXPAND)
@@ -109,10 +109,7 @@ class LicenseChooser(wx.Dialog):
         self.ll_chooser = liblicense.LicenseChooser(None,self.attributes)
 
         #We check/uncheck the checkboxes considering the license
-        self.update_checkboxes(self.licenseURI)
-
-
-
+        self.UpdateCheckboxes(self.licenseURI)
 
     def OnApply(self, event):
         self.license.SetLicense(self.licenseURIText.GetValue())
@@ -121,7 +118,7 @@ class LicenseChooser(wx.Dialog):
     def OnCloseWindow(self, event):
         self.Destroy()
 
-    def update_checkboxes(self,license):
+    def UpdateCheckboxes(self,license):
         if license:
             self.current_flags= list(self.license_flags(license))
         else:
@@ -129,9 +126,17 @@ class LicenseChooser(wx.Dialog):
         self.cb_by.SetValue(self.current_flags[0])
         self.cb_ash.SetValue(self.current_flags[1])
         self.cb_ar.SetValue(self.current_flags[2])
-        #self.cb_ar.Enable(True)
         self.cb_pcw.SetValue(self.current_flags[3])
         self.cb_sa.SetValue(self.current_flags[4])
+
+        #Then we test to enable/disable checkboxes
+        
+        #If "Allow Remixing" is false, then no "Share Alike" is False and deactivated.
+        #if event.IsChecked():
+        #    self.cb_sa.Enable(True)
+        #else:
+        #    self.cb_sa.Enable(False)
+
 
     def license_flags(self,license):
         """
@@ -145,16 +150,6 @@ class LicenseChooser(wx.Dialog):
                 self.attributes[2] in permits,
                 self.attributes[3] in prohibits,
                 self.attributes[4] in requires)
-
-    def ArToggled(self,event):
-        """
-        If "Allow Remixing" is false, then no "Share Alike" is False and deactivated.
-        """
-        print 'ARtoggled'
-        if self.cb_ar.GetValue() == False:
-            self.cb_sa.Enable(False)
-        else :
-            self.cb_sa.Enable(True)
 
     def OnCheck_by(self,event):
         self.OnCheckBox(event, 0)
@@ -178,13 +173,21 @@ class LicenseChooser(wx.Dialog):
         #
         self.current_flags[checkbox] = event.IsChecked()
         self.UpdateLicenseURI()
+        self.UpdateLicenseName()
 
     def OnURIChanged(self,event):
         print event.GetString()
 
+    def UpdateLicenseName(self):
+        self.licenseName = liblicense.get_name(self.licenseURI)
+        print "licenseURI: " + self.licenseURI
+        print "licensename: " + self.licenseName
+        self.licenseNameText.SetValue(self.licenseName)
+
     def UpdateLicenseURI(self):
         print 'update uri'   
 
+        #These are integers
         permits = 0
         requires = 0
         prohibits = 0
@@ -200,19 +203,13 @@ class LicenseChooser(wx.Dialog):
         if self.current_flags[4]:
           requires += self.ll_chooser.attribute_flag("http://creativecommons.org/ns#ShareAlike")
 
+        #grab the license from the permits, requires and prohibits integers
         licenses = self.ll_chooser.get_licenses(permits=permits, requires=requires, prohibits=prohibits)
 
         if licenses:
-            print licenses[0]
-
             self.licenseURI = licenses[0]
-            print self.licenseURI
             self.licenseURIText.SetValue(self.licenseURI)
 
-
-
-
-    
     def GetNewLicense(self):
         return self.license
 

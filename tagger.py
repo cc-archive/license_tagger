@@ -25,8 +25,7 @@ import liblicense
 
 import chooser
 
-#TODO : handle license
-publisherlicenseText = "GNUGPL v2 or later"
+publisherlicenseText = "GNUGPL v2 or later TODO"
 
 class License():
     def __init__(self):
