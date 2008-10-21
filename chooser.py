@@ -177,6 +177,8 @@ class LicenseChooser(wx.Dialog):
 
     def OnURIChanged(self,event):
         print event.GetString()
+        self.licenseURI = event.GetString()
+        self.UpdateCheckboxes(self.licenseURI)
 
     def UpdateLicenseName(self):
         self.licenseName = liblicense.get_name(self.licenseURI)
