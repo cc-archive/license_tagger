@@ -40,7 +40,7 @@ class LicenseChooser(wx.Dialog):
             self.licenseURI = ''
             self.licenseName = ''
 
-        self.SetSize((500, 200))
+        self.SetSize((500, 250))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         #Attribution
@@ -85,17 +85,30 @@ class LicenseChooser(wx.Dialog):
         self.licenseURIText.Bind(wx.EVT_TEXT, self.OnURIChanged)
         licenseURILine.Add(self.licenseURIText,3,wx.EXPAND)
 
-        #Apply
-        applybtn=wx.Button(self, wx.ID_APPLY)
+        btnsizer = wx.StdDialogButtonSizer()
+        applybtn = wx.Button(self, wx.ID_OK)
         applybtn.Bind(wx.EVT_BUTTON, self.OnApply)
+        applybtn.SetDefault()
+        btnsizer.AddButton(applybtn)
+        cancelbtn = wx.Button(self, wx.ID_CANCEL)
+        applybtn.Bind(wx.EVT_BUTTON, self.OnCancel)
+        btnsizer.AddButton(cancelbtn)
+        btnsizer.Realize()
 
         #Sizer
         sizer=wx.BoxSizer(wx.VERTICAL)  
         sizer.AddMany([ ashLine, byLine, arLine,
                             pcwLine, saLine ])
+        sizer.Add((20,20))
         sizer.Add(licenseNameLine,0,wx.EXPAND)    
-        sizer.Add(licenseURILine,0,wx.EXPAND)        
-        sizer.Add(applybtn)
+        sizer.Add(licenseURILine,0,wx.EXPAND)
+        sizer.Add((20,20))
+        sizer.Add(btnsizer, 0, wx.EXPAND)   
+
+        #Border
+        border=wx.BoxSizer(wx.HORIZONTAL) 
+        border.Add(sizer, 0, wx.ALL, 15)
+
         self.SetSizer(sizer)
 
         #We define the attributes URI        
@@ -112,6 +125,9 @@ class LicenseChooser(wx.Dialog):
 
     def OnApply(self, event):
         self.license.SetLicense(self.licenseURIText.GetValue())
+        self.Destroy()
+
+    def OnCancel(self, event):
         self.Destroy()
 
     def OnCloseWindow(self, event):
