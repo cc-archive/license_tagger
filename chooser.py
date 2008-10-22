@@ -76,8 +76,7 @@ class LicenseChooser(wx.Dialog):
         #License name and URI
         licenseNameLine = wx.BoxSizer(wx.HORIZONTAL)
         licenseNameLine.Add(wx.StaticText(self, -1, "License:"),1,wx.EXPAND)
-        self.licenseNameText = wx.TextCtrl(self, -1, self.licenseName)
-        self.licenseNameText.Enable(False)
+        self.licenseNameText = wx.StaticText(self, -1, self.licenseName)
         licenseNameLine.Add(self.licenseNameText,3,wx.EXPAND)
         
         licenseURILine = wx.BoxSizer(wx.HORIZONTAL)
@@ -198,9 +197,9 @@ class LicenseChooser(wx.Dialog):
         newname = liblicense.get_name(self.licenseURI)
         if newname:
             self.licenseName = newname
-            self.licenseNameText.SetValue(self.licenseName)
+            self.licenseNameText.SetLabel(self.licenseName)
         else:
-            self.licenseNameText.SetValue("")
+            self.licenseNameText.SetLabel('')
 
     def UpdateLicenseURI(self):
         #These are integers
