@@ -92,7 +92,7 @@ class LicenseChooser(wx.Dialog):
 
         #Sizer
         sizer=wx.BoxSizer(wx.VERTICAL)  
-        sizer.AddMany([ byLine, ashLine, arLine,
+        sizer.AddMany([ ashLine, byLine, arLine,
                             pcwLine, saLine ])
         sizer.Add(licenseNameLine,0,wx.EXPAND)    
         sizer.Add(licenseURILine,0,wx.EXPAND)        
@@ -133,6 +133,21 @@ class LicenseChooser(wx.Dialog):
 
     def CheckForDisabledCheckboxes(self):
         #If "Allow Remixing" is false, then "Share Alike" is False and deactivated.
+        if not self.current_flags[1]:
+            self.cb_by.Enable(False)
+            self.cb_by.SetValue(False)            
+            self.cb_ar.Enable(False)
+            self.cb_ar.SetValue(False)   
+            self.cb_pcw.Enable(False)
+            self.cb_pcw.SetValue(False)   
+            self.cb_sa.Enable(False)
+            self.cb_sa.SetValue(False)   
+        else:
+            self.cb_by.Enable(True)          
+            self.cb_ar.Enable(True)
+            self.cb_pcw.Enable(True)
+            self.cb_sa.Enable(True)
+
         if self.current_flags[2]:
             self.cb_sa.Enable(True)
         else:
@@ -168,10 +183,6 @@ class LicenseChooser(wx.Dialog):
         self.OnCheckBox(event, 4)
 
     def OnCheckBox(self,event,checkbox):
-        #TODO : remove those tests
-        print checkbox
-        print event.IsChecked()
-        #
         self.current_flags[checkbox] = event.IsChecked()
         self.CheckForDisabledCheckboxes()
         self.UpdateLicenseURI()
@@ -187,8 +198,6 @@ class LicenseChooser(wx.Dialog):
         newname = liblicense.get_name(self.licenseURI)
         if newname:
             self.licenseName = newname
-            print "licenseURI: " + self.licenseURI
-            print "licensename: " + self.licenseName
             self.licenseNameText.SetValue(self.licenseName)
         else:
             self.licenseNameText.SetValue("")
@@ -216,6 +225,10 @@ class LicenseChooser(wx.Dialog):
         if licenses:
             self.licenseURI = licenses[0]
             self.licenseURIText.SetValue(self.licenseURI)
+        else :
+            self.licenseURI = ''
+            self.licenseURIText.SetValue('')
+
 
     def GetNewLicense(self):
         return self.license
