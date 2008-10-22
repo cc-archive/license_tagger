@@ -14,7 +14,7 @@
 #
 # Copyright 2008, Creative Commons, www.creativecommons.org.
 # Copyright 2008, Steren Giannini
-# Copyright 2007, Scott Shawcroft. (portion of this code is based on Scott work)
+# Copyright 2007, Scott Shawcroft. (portion of this code is based on Scott's work)
 
 import wx
 import os.path
@@ -128,14 +128,15 @@ class LicenseChooser(wx.Dialog):
         self.cb_ar.SetValue(self.current_flags[2])
         self.cb_pcw.SetValue(self.current_flags[3])
         self.cb_sa.SetValue(self.current_flags[4])
+        self.CheckForDisabledCheckboxes()
 
-        #Then we test to enable/disable checkboxes
-        
-        #If "Allow Remixing" is false, then no "Share Alike" is False and deactivated.
-        #if event.IsChecked():
-        #    self.cb_sa.Enable(True)
-        #else:
-        #    self.cb_sa.Enable(False)
+
+    def CheckForDisabledCheckboxes(self):
+        #If "Allow Remixing" is false, then "Share Alike" is False and deactivated.
+        if self.current_flags[2]:
+            self.cb_sa.Enable(True)
+        else:
+            self.cb_sa.Enable(False)
 
 
     def license_flags(self,license):
@@ -172,8 +173,10 @@ class LicenseChooser(wx.Dialog):
         print event.IsChecked()
         #
         self.current_flags[checkbox] = event.IsChecked()
+        self.CheckForDisabledCheckboxes()
         self.UpdateLicenseURI()
         self.UpdateLicenseName()
+
 
     def OnURIChanged(self,event):
         self.licenseURI = event.GetString()
