@@ -1,0 +1,121 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-11-06 22:06+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../tagger.py:50
+msgid "(unlicensed)"
+msgstr ""
+
+#: ../tagger.py:60
+msgid "License Tagger"
+msgstr ""
+
+#: ../tagger.py:125 ../chooser.py:78
+msgid "License:"
+msgstr ""
+
+#: ../tagger.py:131
+msgid "Title:"
+msgstr ""
+
+#: ../tagger.py:140
+msgid "Author:"
+msgstr ""
+
+#: ../tagger.py:160
+msgid "&Open"
+msgstr ""
+
+#: ../tagger.py:160
+msgid "Open a new file"
+msgstr ""
+
+#: ../tagger.py:161
+msgid "&Save"
+msgstr ""
+
+#: ../tagger.py:161
+msgid "Save the current file"
+msgstr ""
+
+#: ../tagger.py:162
+msgid "Save &As"
+msgstr ""
+
+#: ../tagger.py:162
+msgid "Save the file under a different name"
+msgstr ""
+
+#: ../tagger.py:165
+msgid "E&xit"
+msgstr ""
+
+#: ../tagger.py:165
+msgid "Terminate the program"
+msgstr ""
+
+#: ../tagger.py:173
+msgid "&About"
+msgstr ""
+
+#: ../tagger.py:173
+msgid "Information about this program"
+msgstr ""
+
+#: ../tagger.py:177
+msgid "&File"
+msgstr ""
+
+#: ../tagger.py:178
+msgid "&Help"
+msgstr ""
+
+#: ../tagger.py:203
+msgid "Choose a file"
+msgstr ""
+
+#: ../tagger.py:303
+msgid "Open or drag-and-drop a file"
+msgstr ""
+
+#: ../chooser.py:32
+msgid "Choose your license"
+msgstr ""
+
+#: ../chooser.py:48
+msgid "Require Attribution"
+msgstr ""
+
+#: ../chooser.py:54
+msgid "Allow Sharing"
+msgstr ""
+
+#: ../chooser.py:60
+msgid "Allow Remixing"
+msgstr ""
+
+#: ../chooser.py:66
+msgid "Prohibit Commercial Works"
+msgstr ""
+
+#: ../chooser.py:72
+msgid "Require Others to Share-Alike"
+msgstr ""
+
+#: ../chooser.py:83
+msgid "URI:"
+msgstr ""

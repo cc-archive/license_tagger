@@ -1,0 +1,121 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# steren <steren.giannini@gmail.co>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-11-06 22:06+0100\n"
+"PO-Revision-Date: 2008-11-06 22:07+0100\n"
+"Last-Translator: steren <steren.giannini@gmail.com>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../tagger.py:50
+msgid "(unlicensed)"
+msgstr "(pas de licence)"
+
+#: ../tagger.py:60
+msgid "License Tagger"
+msgstr ""
+
+#: ../tagger.py:125 ../chooser.py:78
+msgid "License:"
+msgstr "Licence :"
+
+#: ../tagger.py:131
+msgid "Title:"
+msgstr "Titre :"
+
+#: ../tagger.py:140
+msgid "Author:"
+msgstr "Auteur :"
+
+#: ../tagger.py:160
+msgid "&Open"
+msgstr "&Ouvrir"
+
+#: ../tagger.py:160
+msgid "Open a new file"
+msgstr "Ouvre un nouveau fichier"
+
+#: ../tagger.py:161
+msgid "&Save"
+msgstr "&Enregistrer"
+
+#: ../tagger.py:161
+msgid "Save the current file"
+msgstr "Enregistre le fichier en cours"
+
+#: ../tagger.py:162
+msgid "Save &As"
+msgstr "Enregistrer &sous"
+
+#: ../tagger.py:162
+msgid "Save the file under a different name"
+msgstr "Enregistre le fichier sous un nom différent"
+
+#: ../tagger.py:165
+msgid "E&xit"
+msgstr "&Quitter"
+
+#: ../tagger.py:165
+msgid "Terminate the program"
+msgstr "Quitte l'application'"
+
+#: ../tagger.py:173
+msgid "&About"
+msgstr "&A propos"
+
+#: ../tagger.py:173
+msgid "Information about this program"
+msgstr "Informations sur ce programme"
+
+#: ../tagger.py:177
+msgid "&File"
+msgstr "&Fichier"
+
+#: ../tagger.py:178
+msgid "&Help"
+msgstr "&Aide"
+
+#: ../tagger.py:203
+msgid "Choose a file"
+msgstr "Choisissez un fichier"
+
+#: ../tagger.py:303
+msgid "Open or drag-and-drop a file"
+msgstr "Ouvrez ou glisez/déposez un fichier"
+
+#: ../chooser.py:32
+msgid "Choose your license"
+msgstr "Choisissez votre licence"
+
+#: ../chooser.py:48
+msgid "Require Attribution"
+msgstr "Exiger l'attribution'"
+
+#: ../chooser.py:54
+msgid "Allow Sharing"
+msgstr "Autoriser le partage"
+
+#: ../chooser.py:60
+msgid "Allow Remixing"
+msgstr "Autoriser les modifications"
+
+#: ../chooser.py:66
+msgid "Prohibit Commercial Works"
+msgstr "Interdire les utilisations commerciales"
+
+#: ../chooser.py:72
+msgid "Require Others to Share-Alike"
+msgstr "Exiger le partage à l'identique'"
+
+#: ../chooser.py:83
+msgid "URI:"
+msgstr "URI :"
