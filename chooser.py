@@ -29,7 +29,7 @@ import liblicense
 class LicenseChooser(wx.Dialog):
 
     def __init__(self, parent, license):
-        wx.Dialog.__init__(self,parent, -1, 'Choose your license')
+        wx.Dialog.__init__(self,parent, -1, _('Choose your license'))
 
         self.license = license
 
@@ -45,42 +45,42 @@ class LicenseChooser(wx.Dialog):
 
         #Attribution
         byLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_by = wx.CheckBox(self, -1, "Require Attribution")
+        self.cb_by = wx.CheckBox(self, -1, _("Require Attribution"))
         byLine.Add(self.cb_by,1,wx.EXPAND)
         self.cb_by.Bind(wx.EVT_CHECKBOX, self.OnCheck_by )
 
         #Sharing
         ashLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_ash = wx.CheckBox(self, -1, "Allow Sharing")
+        self.cb_ash = wx.CheckBox(self, -1, _("Allow Sharing"))
         ashLine.Add(self.cb_ash,1,wx.EXPAND)
         self.cb_ash.Bind(wx.EVT_CHECKBOX, self.OnCheck_ash )
 
         #Remixing
         arLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_ar = wx.CheckBox(self, -1, "Allow Remixing")
+        self.cb_ar = wx.CheckBox(self, -1, _("Allow Remixing"))
         arLine.Add(self.cb_ar,1,wx.EXPAND)
         self.cb_ar.Bind(wx.EVT_CHECKBOX, self.OnCheck_ar )
 
         #Prohibit Commercial Works
         pcwLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_pcw = wx.CheckBox(self, -1, "Prohibit Commercial Works")
+        self.cb_pcw = wx.CheckBox(self, -1, _("Prohibit Commercial Works"))
         pcwLine.Add(self.cb_pcw,1,wx.EXPAND)
         self.cb_pcw.Bind(wx.EVT_CHECKBOX, self.OnCheck_pcw )
 
         #Share Alike
         saLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_sa = wx.CheckBox(self, -1, "Require Others to Share-Alike")
+        self.cb_sa = wx.CheckBox(self, -1, _("Require Others to Share-Alike"))
         saLine.Add(self.cb_sa,1,wx.EXPAND)
         self.cb_sa.Bind(wx.EVT_CHECKBOX, self.OnCheck_sa )
 
         #License name and URI
         licenseNameLine = wx.BoxSizer(wx.HORIZONTAL)
-        licenseNameLine.Add(wx.StaticText(self, -1, "License:"),1,wx.EXPAND)
+        licenseNameLine.Add(wx.StaticText(self, -1, _("License:")),1,wx.EXPAND)
         self.licenseNameText = wx.StaticText(self, -1, self.licenseName)
         licenseNameLine.Add(self.licenseNameText,3,wx.EXPAND)
         
         licenseURILine = wx.BoxSizer(wx.HORIZONTAL)
-        licenseURILine.Add(wx.StaticText(self, -1, "URI:"),1,wx.EXPAND)
+        licenseURILine.Add(wx.StaticText(self, -1, _("URI:")),1,wx.EXPAND)
         self.licenseURIText = wx.TextCtrl(self, -1, self.licenseURI)
         self.licenseURIText.Bind(wx.EVT_TEXT, self.OnURIChanged)
         licenseURILine.Add(self.licenseURIText,3,wx.EXPAND)

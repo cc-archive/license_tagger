@@ -17,13 +17,37 @@
 # Copyright 2008, Steren Giannini
 
 import wx
-import os.path
+import os
 import sys
 from wx.lib.wordwrap import wordwrap
-
 import liblicense
 
+import gettext
+
 import chooser
+######
+#I18N#
+######
+# Hack to get the locale directory
+basepath = os.path.abspath(os.path.dirname(sys.argv[0]))
+localedir = os.path.join(basepath, "locale")
+langid = wx.LANGUAGE_DEFAULT    # use OS default; or use LANGUAGE_FRENCH, etc. 
+domain = "messages"             # the translation file is messages.mo
+# Set locale for wxWidgets
+mylocale = wx.Locale(langid)
+mylocale.AddCatalogLookupPathPrefix(localedir)
+mylocale.AddCatalog(domain)
+_ = wx.GetTranslation
+
+######
+#I18N#
+######
+
+# Set up Python's gettext
+mytranslation = gettext.translation(domain, localedir,
+    [mylocale.GetCanonicalName()], fallback = True)
+mytranslation.install()
+
 
 publisherlicenseText = "GNUGPL v2 or later TODO"
 
@@ -42,7 +66,7 @@ class License():
         - (unlicensed) if no license info
         """
         if self.GetLicense() == None:
-            return '(unlicensed)'
+            return _('(unlicensed)')
         elif liblicense.get_name(self.GetLicense()) != None:
             return liblicense.get_name(self.GetLicense())
         else :
@@ -52,7 +76,7 @@ class License():
 class MainWindow(wx.Frame):
     def __init__(self, license):
         super(MainWindow, self).__init__(None, size=(500,250))
-        self.programname = 'License Tagger'
+        self.programname = _('License Tagger')
         self.license = license       
 
         #for parameter, we split the filepath into dirname and filename
@@ -117,13 +141,13 @@ class MainWindow(wx.Frame):
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
 
         licenseLine = wx.BoxSizer(wx.HORIZONTAL)
-        licenseLine.Add(wx.StaticText(self, -1, "License: "),1,wx.EXPAND)
+        licenseLine.Add(wx.StaticText(self, -1, _("License:")),1,wx.EXPAND)
         licenseLine.Add(licenseCell,2,wx.EXPAND)        
 
         licenseInfoBox.Add(licenseLine,-1,wx.EXPAND)
 
         titleLine = wx.BoxSizer(wx.HORIZONTAL)
-        titleLine.Add(wx.StaticText(self, -1, "Title: "),1,wx.EXPAND)
+        titleLine.Add(wx.StaticText(self, -1, _("Title:")),1,wx.EXPAND)
         self.titleText = wx.TextCtrl(self, -1, self.title)
         #TODO: remove this line when title metadata works:
         self.titleText.Enable(False)
@@ -132,7 +156,7 @@ class MainWindow(wx.Frame):
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
-        authorLine.Add(wx.StaticText(self, -1, "Author: "),1,wx.EXPAND)
+        authorLine.Add(wx.StaticText(self, -1, _("Author:")),1,wx.EXPAND)
         self.authorText = wx.TextCtrl(self, -1, self.author)
         #TODO: remove this line when title metadata works:
         self.authorText.Enable(False)
@@ -152,12 +176,12 @@ class MainWindow(wx.Frame):
         #File Menu
         fileMenu = wx.Menu()
         for id, label, helpText, handler in \
-            [(wx.ID_OPEN, '&Open', 'Open a new file', self.OnOpen),
-             (wx.ID_SAVE, '&Save', 'Save the current file', self.OnSave),
-             (wx.ID_SAVEAS, 'Save &As', 'Save the file under a different name',
+            [(wx.ID_OPEN, _('&Open'), _('Open a new file'), self.OnOpen),
+             (wx.ID_SAVE, _('&Save'), _('Save the current file'), self.OnSave),
+             (wx.ID_SAVEAS, _('Save &As'), _('Save the file under a different name'),
                 self.OnSaveAs),
              (None, None, None, None),
-             (wx.ID_EXIT, 'E&xit', 'Terminate the program', self.OnExit)]:
+             (wx.ID_EXIT, _('E&xit'), _('Terminate the program'), self.OnExit)]:
             if id == None:
                 fileMenu.AppendSeparator()
             else:
@@ -165,12 +189,12 @@ class MainWindow(wx.Frame):
                 self.Bind(wx.EVT_MENU, handler, item)
         #Help Menu
         helpMenu = wx.Menu()
-        about = helpMenu.Append(wx.ID_ABOUT,'&About','Information about this program')
+        about = helpMenu.Append(wx.ID_ABOUT,_('&About'),_('Information about this program'))
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
 
         menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, '&File')
-        menuBar.Append(helpMenu, '&Help')
+        menuBar.Append(fileMenu, _('&File'))
+        menuBar.Append(helpMenu, _('&Help'))
         self.SetMenuBar(menuBar)
 
     def SetTitle(self):
@@ -195,7 +219,7 @@ class MainWindow(wx.Frame):
         ''' Return a dictionary with file dialog options that can be
             used in both the save file dialog as well as in the open
             file dialog. '''
-        return dict(message='Choose a file', defaultDir=self.dirname,
+        return dict(message=_('Choose a file'), defaultDir=self.dirname,
                     wildcard='*.*')
 
     def askUserForFilename(self, **dialogOptions):
@@ -295,7 +319,7 @@ if len(sys.argv) > 1:
     statusMessage = ""
 else :
     filepath = False
-    statusMessage = "Open or drag-and-drop a file"
+    statusMessage = _("Open or drag-and-drop a file")
 
 license = License()
 
