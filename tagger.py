@@ -119,9 +119,10 @@ class MainWindow(wx.Frame):
         exit.Bind(wx.EVT_BUTTON, self.OnExit)
         buttonsbox.Add(exit,2,wx.EXPAND)
         buttonsbox.Add((60, 20), 1, wx.EXPAND)
-        save=wx.Button(self, wx.ID_SAVE)
-        save.Bind(wx.EVT_BUTTON, self.OnSave)
-        buttonsbox.Add(save,2,wx.EXPAND)
+        self.save=wx.Button(self, wx.ID_SAVE)
+        self.save.Bind(wx.EVT_BUTTON, self.OnSave)
+        self.save.Enable(False)
+        buttonsbox.Add(self.save,2,wx.EXPAND)
         #TODO : remove====
         #test=wx.Button(self, 100, "&Test")
         #test.Bind(wx.EVT_BUTTON, self.OnTest)
@@ -213,6 +214,7 @@ class MainWindow(wx.Frame):
         self.licenseText.SetLabel(self.GetLicenseName())
         if self.filename :
             self.editLicense.Enable(True)
+            self.save.Enable(True)
         else :
             self.editLicense.Enable(False)
         #self.titleText.SetValue(self.title)
