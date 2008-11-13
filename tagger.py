@@ -145,7 +145,7 @@ class MainWindow(wx.Frame):
 
         licenseLine = wx.BoxSizer(wx.HORIZONTAL)
         licenseLine.Add(wx.StaticText(self, -1, _("License:")),1,wx.EXPAND)
-        licenseLine.Add(licenseCell,2,wx.EXPAND)        
+        licenseLine.Add(licenseCell,3,wx.EXPAND)        
 
         licenseInfoBox.Add(licenseLine,-1,wx.EXPAND)
 
@@ -155,7 +155,7 @@ class MainWindow(wx.Frame):
         #TODO: remove this line when title metadata works:
         self.titleText.Enable(False)
         #
-        titleLine.Add(self.titleText,2,wx.EXPAND)
+        titleLine.Add(self.titleText,3,wx.EXPAND)
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
@@ -164,7 +164,7 @@ class MainWindow(wx.Frame):
         #TODO: remove this line when title metadata works:
         self.authorText.Enable(False)
         #        
-        authorLine.Add(self.authorText,2,wx.EXPAND)
+        authorLine.Add(self.authorText,3,wx.EXPAND)
         licenseInfoBox.Add(authorLine,0,wx.EXPAND)
         self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
 
