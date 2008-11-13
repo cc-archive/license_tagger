@@ -178,26 +178,28 @@ class MainWindow(wx.Frame):
 
     def CreateMenu(self):
         #File Menu
-        fileMenu = wx.Menu()
-        for id, label, helpText, handler in \
-            [(wx.ID_OPEN, _('&Open'), _('Open a new file'), self.OnOpen),
-             (wx.ID_SAVE, _('&Save'), _('Save the current file'), self.OnSave),
-             (wx.ID_SAVEAS, _('Save &As'), _('Save the file under a different name'),
-                self.OnSaveAs),
-             (None, None, None, None),
-             (wx.ID_EXIT, _('E&xit'), _('Terminate the program'), self.OnExit)]:
+        self.fileMenu = wx.Menu()
+        for id, label, helpText, enabled, handler in \
+            [(wx.ID_OPEN, _('&Open'), _('Open a new file'), True, self.OnOpen),
+             (wx.ID_SAVE, _('&Save'), _('Save the current file'), False,  self.OnSave),
+             (wx.ID_SAVEAS, _('Save &As'), _('Save the file under a different name'), False, self.OnSaveAs),
+             (None, None, None, None, None),
+             (wx.ID_EXIT, _('E&xit'), _('Terminate the program'), True, self.OnExit)]:
             if id == None:
-                fileMenu.AppendSeparator()
+                self.fileMenu.AppendSeparator()
             else:
-                item = fileMenu.Append(id, label, helpText)
+                item = self.fileMenu.Append(id, label, helpText)
+                self.fileMenu.Enable(id, enabled)
                 self.Bind(wx.EVT_MENU, handler, item)
+
+
         #Help Menu
         helpMenu = wx.Menu()
         about = helpMenu.Append(wx.ID_ABOUT,_('&About'),_('Information about this program'))
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
 
         menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, _('&File'))
+        menuBar.Append(self.fileMenu, _('&File'))
         menuBar.Append(helpMenu, _('&Help'))
         self.SetMenuBar(menuBar)
 
@@ -215,6 +217,8 @@ class MainWindow(wx.Frame):
         if self.filename :
             self.editLicense.Enable(True)
             self.save.Enable(True)
+            self.fileMenu.Enable(wx.ID_SAVE, True)
+            self.fileMenu.Enable(wx.ID_SAVEAS, True)
         else :
             self.editLicense.Enable(False)
         #self.titleText.SetValue(self.title)
