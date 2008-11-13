@@ -107,9 +107,9 @@ class LicenseChooser(wx.Dialog):
 
         #Border
         border=wx.BoxSizer(wx.HORIZONTAL) 
-        border.Add(sizer, 0, wx.ALL, 15)
+        border.Add(sizer, 1, wx.ALL, 15)
 
-        self.SetSizer(sizer)
+        self.SetSizer(border)
 
         #We define the attributes URI        
         self.attributes = ["http://creativecommons.org/ns#Attribution",

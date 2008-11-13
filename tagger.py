@@ -75,7 +75,7 @@ class License():
 
 class MainWindow(wx.Frame):
     def __init__(self, license):
-        super(MainWindow, self).__init__(None, size=(500,250))
+        super(MainWindow, self).__init__(None, size=(600,270))
         self.programname = _('License Tagger')
         self.license = license       
 
@@ -108,8 +108,11 @@ class MainWindow(wx.Frame):
         self.CreateLicenseInfo()
         self.sizer.Add((60, 20), -1, wx.EXPAND)
         self.CreateSaveDoneButtons()
-        self.SetSizer(self.sizer)
-        
+        #Border
+        border=wx.BoxSizer(wx.HORIZONTAL) 
+        border.Add(self.sizer, 1, wx.ALL, 15)
+        self.SetSizer(border)      
+
     def CreateSaveDoneButtons(self):
         buttonsbox = wx.BoxSizer(wx.HORIZONTAL)
         exit=wx.Button(self, wx.ID_EXIT)

@@ -98,7 +98,7 @@ msgstr "Choisissez votre licence"
 
 #: ../chooser.py:48
 msgid "Require Attribution"
-msgstr "Exiger l'attribution'"
+msgstr "Exiger l'attribution"
 
 #: ../chooser.py:54
 msgid "Allow Sharing"
@@ -114,7 +114,7 @@ msgstr "Interdire les utilisations commerciales"
 
 #: ../chooser.py:72
 msgid "Require Others to Share-Alike"
-msgstr "Exiger le partage à l'identique'"
+msgstr "Exiger le partage à l'identique"
 
 #: ../chooser.py:83
 msgid "URI:"
