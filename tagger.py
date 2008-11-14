@@ -72,6 +72,21 @@ class License():
         else :
             return self.GetLicense()
 
+class MyFileDropTarget(wx.FileDropTarget):
+    """
+    For Drag And Drop
+    """
+    def __init__(self, window):
+        wx.FileDropTarget.__init__(self)
+        self.window = window
+
+    def OnDropFiles(self, x, y, filenames):
+        pathsplit = os.path.split(filenames[0])
+        self.window.dirname = pathsplit[0]
+        self.window.filename = pathsplit[1]
+        self.window.ReadInfo()
+        self.window.UpdateLicenseBox()
+
 
 class MainWindow(wx.Frame):
     def __init__(self, license):
@@ -97,10 +112,8 @@ class MainWindow(wx.Frame):
 
         self.CreateExteriorWindowComponents()
         self.CreateInteriorWindowComponents()
-        #TODO
-        #for drag and drop http://docs.wxwidgets.org/trunk/overview_dnd.html and DragAndDrop.py
-        #self.SetDropTarget(dt)
-
+        dt = MyFileDropTarget(self)
+        self.SetDropTarget(dt)
 
     def CreateInteriorWindowComponents(self):
         self.sizer=wx.BoxSizer(wx.VERTICAL)                 
@@ -285,10 +298,6 @@ class MainWindow(wx.Frame):
         win.Show()
         win.ShowModal()
         self.UpdateLicenseBox()
-
-    #TODO remove============
-    #def OnTest(self, event):
-    #=======================
 
     def OnOpen(self, event):
         if self.askUserForFilename(style=wx.OPEN,
