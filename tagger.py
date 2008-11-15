@@ -100,9 +100,9 @@ class MainWindow(wx.Frame):
             self.dirname = pathsplit[0]
             self.filename = pathsplit[1]
             self.license.SetLicense(liblicense.read(filepath))
-            #TODO remove the 2 folowing lines when ReadInfo is totally OK                   
-            self.author = ''
-            self.title = ''
+            #TODO modify the 2 folowing lines when ReadInfo is totally OK                   
+            self.author = 'AUTEUR LOADED ON STARTUP'
+            self.title = 'TITRE LOADED ON STARTUP'
         else :
             self.dirname = '.'
             self.filename = ''
@@ -112,8 +112,11 @@ class MainWindow(wx.Frame):
 
         self.CreateExteriorWindowComponents()
         self.CreateInteriorWindowComponents()
+        #enable drag and drop
         dt = MyFileDropTarget(self)
         self.SetDropTarget(dt)
+        #update UI
+        self.UpdateLicenseBox()
 
     def CreateInteriorWindowComponents(self):
         self.sizer=wx.BoxSizer(wx.VERTICAL)                 
@@ -134,13 +137,7 @@ class MainWindow(wx.Frame):
         buttonsbox.Add((60, 20), 1, wx.EXPAND)
         self.save=wx.Button(self, wx.ID_SAVE)
         self.save.Bind(wx.EVT_BUTTON, self.OnSave)
-        self.save.Enable(False)
         buttonsbox.Add(self.save,2,wx.EXPAND)
-        #TODO : remove====
-        #test=wx.Button(self, 100, "&Test")
-        #test.Bind(wx.EVT_BUTTON, self.OnTest)
-        #self.buttonsbox.Add(test,1,wx.EXPAND)
-        #==================
         self.sizer.Add(buttonsbox,-1,wx.EXPAND)
 
     def CreateLicenseInfo(self):
@@ -154,7 +151,6 @@ class MainWindow(wx.Frame):
         licenseCell.Add(self.licenseText,3,wx.EXPAND)
         self.editLicense=wx.Button(self, wx.ID_EDIT)
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
-        self.editLicense.Enable(False)
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
 
         licenseLine = wx.BoxSizer(wx.HORIZONTAL)
@@ -166,18 +162,12 @@ class MainWindow(wx.Frame):
         titleLine = wx.BoxSizer(wx.HORIZONTAL)
         titleLine.Add(wx.StaticText(self, -1, _("Title:")),1,wx.EXPAND)
         self.titleText = wx.TextCtrl(self, -1, self.title)
-        #TODO: remove this line when title metadata works:
-        self.titleText.Enable(False)
-        #
         titleLine.Add(self.titleText,3,wx.EXPAND)
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
         authorLine.Add(wx.StaticText(self, -1, _("Author:")),1,wx.EXPAND)
         self.authorText = wx.TextCtrl(self, -1, self.author)
-        #TODO: remove this line when title metadata works:
-        self.authorText.Enable(False)
-        #        
         authorLine.Add(self.authorText,3,wx.EXPAND)
         licenseInfoBox.Add(authorLine,0,wx.EXPAND)
         self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
@@ -192,17 +182,16 @@ class MainWindow(wx.Frame):
     def CreateMenu(self):
         #File Menu
         self.fileMenu = wx.Menu()
-        for id, label, helpText, enabled, handler in \
-            [(wx.ID_OPEN, _('&Open'), _('Open a new file'), True, self.OnOpen),
-             (wx.ID_SAVE, _('&Save'), _('Save the current file'), False,  self.OnSave),
-             (wx.ID_SAVEAS, _('Save &As'), _('Save the file under a different name'), False, self.OnSaveAs),
-             (None, None, None, None, None),
-             (wx.ID_EXIT, _('E&xit'), _('Terminate the program'), True, self.OnExit)]:
+        for id, label, helpText, handler in \
+            [(wx.ID_OPEN, _('&Open'), _('Open a new file'), self.OnOpen),
+             (wx.ID_SAVE, _('&Save'), _('Save the current file'),self.OnSave),
+             (wx.ID_SAVEAS, _('Save &As'), _('Save the file under a different name'), self.OnSaveAs),
+             (None, None, None, None),
+             (wx.ID_EXIT, _('E&xit'), _('Terminate the program'), self.OnExit)]:
             if id == None:
                 self.fileMenu.AppendSeparator()
             else:
                 item = self.fileMenu.Append(id, label, helpText)
-                self.fileMenu.Enable(id, enabled)
                 self.Bind(wx.EVT_MENU, handler, item)
 
 
@@ -232,10 +221,17 @@ class MainWindow(wx.Frame):
             self.save.Enable(True)
             self.fileMenu.Enable(wx.ID_SAVE, True)
             self.fileMenu.Enable(wx.ID_SAVEAS, True)
+            self.titleText.Enable(True)
+            self.authorText.Enable(True)
         else :
             self.editLicense.Enable(False)
-        #self.titleText.SetValue(self.title)
-        #self.authorText.SetValue(self.author)
+            self.save.Enable(False)
+            self.fileMenu.Enable(wx.ID_SAVE, False)
+            self.fileMenu.Enable(wx.ID_SAVEAS, False)
+            self.titleText.Enable(False)
+            self.authorText.Enable(False)
+        self.titleText.SetValue(self.title)
+        self.authorText.SetValue(self.author)
 
     def defaultFileDialogOptions(self):
         ''' Return a dictionary with file dialog options that can be
@@ -303,8 +299,9 @@ class MainWindow(wx.Frame):
         if self.askUserForFilename(style=wx.OPEN,
                                    **self.defaultFileDialogOptions()):
             self.ReadInfo()
-            #self.title = self.license
-            #self.author = self.license
+            #TODO modify the folowing line when liblicense handles title and author
+            self.title = "TITRE LOADED ON FILE LOAD"
+            self.author = "AUTEUR LOADED ON FILE LOAD"
             self.UpdateLicenseBox()
             self.SetStatusText("")
 
