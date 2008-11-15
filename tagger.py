@@ -99,10 +99,7 @@ class MainWindow(wx.Frame):
             pathsplit = os.path.split(filepath)
             self.dirname = pathsplit[0]
             self.filename = pathsplit[1]
-            self.license.SetLicense(liblicense.read(filepath))
-            #TODO modify the 2 folowing lines when ReadInfo is totally OK                   
-            self.author = 'AUTEUR LOADED ON STARTUP'
-            self.title = 'TITRE LOADED ON STARTUP'
+            self.ReadInfo()
         else :
             self.dirname = '.'
             self.filename = ''
@@ -296,17 +293,15 @@ class MainWindow(wx.Frame):
         self.UpdateLicenseBox()
 
     def OnOpen(self, event):
-        if self.askUserForFilename(style=wx.OPEN,
-                                   **self.defaultFileDialogOptions()):
+        if self.askUserForFilename(style=wx.OPEN,**self.defaultFileDialogOptions()):
             self.ReadInfo()
-            #TODO modify the folowing line when liblicense handles title and author
-            self.title = "TITRE LOADED ON FILE LOAD"
-            self.author = "AUTEUR LOADED ON FILE LOAD"
             self.UpdateLicenseBox()
             self.SetStatusText("")
 
     def ReadInfo(self):
         self.license.SetLicense(liblicense.read(os.path.join(self.dirname, self.filename)))
+        self.author = 'AUTEUR LOADED ON READINFO'
+        self.title = 'TITRE LOADED ON READINFO'
 
     def GetLicenseName(self):
         """
@@ -322,10 +317,11 @@ class MainWindow(wx.Frame):
             return self.license.GetLicenseName()
 
     def WriteLicenseData(self):
-        #TODO: when liblicense actually works for creator and title : do it        
-        #liblicense.write(os.path.join(self.dirname, self.filename), 
-        #                 "http://purl.org/dc/elements/1.1/title", 
-        #                 self.title)
+        #TODO: when liblicense actually works for creator and title : do it   
+        self.title = self.titleText.GetValue()   
+        liblicense.write(os.path.join(self.dirname, self.filename), "http://purl.org/dc/elements/1.1/title", self.title)
+        self.author = self.authorText.GetValue()
+        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.author)
         liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE,
                          self.license.GetLicense())
 
