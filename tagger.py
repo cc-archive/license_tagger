@@ -54,8 +54,15 @@ publisherlicenseText = "GNUGPL v2 or later TODO"
 class License():
     def __init__(self):
         self.license = None
+        self.author = None
+        self.title = None
+
     def SetLicense(self, license):
         self.license = license        
+    def SetAuthor(self, author):
+        self.author = author       
+    def SetTitle(self, title):
+        self.title = title    
     def GetLicense(self):
         return self.license
     def GetLicenseName(self):
@@ -71,6 +78,16 @@ class License():
             return liblicense.get_name(self.GetLicense())
         else :
             return self.GetLicense()
+    def GetAuthorName(self):
+        if self.author == None :
+            return ''
+        else :
+            return self.author
+    def GetTitleName(self):
+        if self.title == None :
+            return ''
+        else :
+            return self.title
 
 class MyFileDropTarget(wx.FileDropTarget):
     """
@@ -104,8 +121,8 @@ class MainWindow(wx.Frame):
             self.dirname = '.'
             self.filename = ''
             self.license.SetLicense(None)
-            self.author = ''
-            self.title = ''
+            self.license.SetAuthor(None)
+            self.license.SetTitle(None)
 
         self.CreateExteriorWindowComponents()
         self.CreateInteriorWindowComponents()
@@ -158,13 +175,13 @@ class MainWindow(wx.Frame):
 
         titleLine = wx.BoxSizer(wx.HORIZONTAL)
         titleLine.Add(wx.StaticText(self, -1, _("Title:")),1,wx.EXPAND)
-        self.titleText = wx.TextCtrl(self, -1, self.title)
+        self.titleText = wx.TextCtrl(self, -1, self.license.GetTitleName())
         titleLine.Add(self.titleText,3,wx.EXPAND)
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
         authorLine.Add(wx.StaticText(self, -1, _("Author:")),1,wx.EXPAND)
-        self.authorText = wx.TextCtrl(self, -1, self.author)
+        self.authorText = wx.TextCtrl(self, -1, self.license.GetAuthorName())
         authorLine.Add(self.authorText,3,wx.EXPAND)
         licenseInfoBox.Add(authorLine,0,wx.EXPAND)
         self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
@@ -227,8 +244,8 @@ class MainWindow(wx.Frame):
             self.fileMenu.Enable(wx.ID_SAVEAS, False)
             self.titleText.Enable(False)
             self.authorText.Enable(False)
-        self.titleText.SetValue(self.title)
-        self.authorText.SetValue(self.author)
+        self.titleText.SetValue(self.license.GetTitleName())
+        self.authorText.SetValue(self.license.GetAuthorName())
 
     def defaultFileDialogOptions(self):
         ''' Return a dictionary with file dialog options that can be
@@ -300,8 +317,8 @@ class MainWindow(wx.Frame):
 
     def ReadInfo(self):
         self.license.SetLicense(liblicense.read(os.path.join(self.dirname, self.filename)))
-        self.author = 'AUTEUR LOADED ON READINFO'
-        self.title = 'TITRE LOADED ON READINFO'
+        self.license.SetAuthor( liblicense.read(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR) )
+        self.license.SetTitle( liblicense.read(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title') )
 
     def GetLicenseName(self):
         """
@@ -318,12 +335,11 @@ class MainWindow(wx.Frame):
 
     def WriteLicenseData(self):
         #TODO: when liblicense actually works for creator and title : do it   
-        self.title = self.titleText.GetValue()   
-        liblicense.write(os.path.join(self.dirname, self.filename), "http://purl.org/dc/elements/1.1/title", self.title)
-        self.author = self.authorText.GetValue()
-        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.author)
-        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE,
-                         self.license.GetLicense())
+        self.license.SetTitle( self.titleText.GetValue() )
+        liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #check LL_NAME ???
+        self.license.SetAuthor( self.authorText.GetValue() )
+        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
+        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
 
 if len(sys.argv) > 1:
     filepath = sys.argv[1]
