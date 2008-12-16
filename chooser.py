@@ -43,17 +43,17 @@ class LicenseChooser(wx.Dialog):
         self.SetSize((500, 250))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        #Attribution
-        byLine = wx.BoxSizer(wx.HORIZONTAL)
-        self.cb_by = wx.CheckBox(self, -1, _("Require Attribution"))
-        byLine.Add(self.cb_by,1,wx.EXPAND)
-        self.cb_by.Bind(wx.EVT_CHECKBOX, self.OnCheck_by )
-
         #Sharing
         ashLine = wx.BoxSizer(wx.HORIZONTAL)
         self.cb_ash = wx.CheckBox(self, -1, _("Allow Sharing"))
         ashLine.Add(self.cb_ash,1,wx.EXPAND)
         self.cb_ash.Bind(wx.EVT_CHECKBOX, self.OnCheck_ash )
+
+        #Attribution
+        byLine = wx.BoxSizer(wx.HORIZONTAL)
+        self.cb_by = wx.CheckBox(self, -1, _("Require Attribution"))
+        byLine.Add(self.cb_by,1,wx.EXPAND)
+        self.cb_by.Bind(wx.EVT_CHECKBOX, self.OnCheck_by )
 
         #Remixing
         arLine = wx.BoxSizer(wx.HORIZONTAL)
@@ -86,12 +86,12 @@ class LicenseChooser(wx.Dialog):
         licenseURILine.Add(self.licenseURIText,3,wx.EXPAND)
 
         btnsizer = wx.StdDialogButtonSizer()
+        cancelbtn = wx.Button(self, wx.ID_CANCEL)
+        cancelbtn.Bind(wx.EVT_BUTTON, self.OnCancel)
         applybtn = wx.Button(self, wx.ID_OK)
         applybtn.Bind(wx.EVT_BUTTON, self.OnApply)
         applybtn.SetDefault()
         btnsizer.AddButton(applybtn)
-        cancelbtn = wx.Button(self, wx.ID_CANCEL)
-        applybtn.Bind(wx.EVT_BUTTON, self.OnCancel)
         btnsizer.AddButton(cancelbtn)
         btnsizer.Realize()
 
