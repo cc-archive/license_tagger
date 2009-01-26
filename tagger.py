@@ -275,7 +275,7 @@ class MainWindow(wx.Frame):
         info.Version = "1.0"
         info.Copyright = "(C) 2009 Creative Commons"
         info.Description = wordwrap(
-            "Easily add license metadata into files.",
+            _("Easily add license metadata into files."),
             350, wx.ClientDC(self))
         info.WebSite = ("http://wiki.creativecommons.org/License_tagger", self.programname + " home page")
         info.Developers = [ "Steren Giannini" ]
@@ -288,6 +288,7 @@ class MainWindow(wx.Frame):
 
     def OnSave(self, event):
         self.WriteLicenseData()
+        self.ReadInfo()
         self.UpdateLicenseBox()
 
     def OnSaveAs(self, event):
@@ -309,7 +310,7 @@ class MainWindow(wx.Frame):
             self.SetStatusText("")
 
     def ReadInfo(self):
-        self.license.SetLicense(liblicense.read(os.path.join(self.dirname, self.filename)))
+        self.license.SetLicense( liblicense.read(os.path.join(self.dirname, self.filename)) )
         self.license.SetAuthor( liblicense.read(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR) )
         self.license.SetTitle( liblicense.read(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title') )
 
@@ -328,10 +329,21 @@ class MainWindow(wx.Frame):
 
     def WriteLicenseData(self):
         self.license.SetTitle( self.titleText.GetValue() )
-        liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
+        title_writed = liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
         self.license.SetAuthor( self.authorText.GetValue() )
-        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
-        liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
+        author_writed = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
+        license_writed = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
+        if (title_writed and author_writed and license_writed) == False :
+            error_msg = _('Problem to write into the file ') + self.filename + ' :\n'
+            if (not license_writed) :
+                error_msg += _('Error when writing the license.\n') 
+            if (not title_writed) :
+                error_msg += _('Error when writing the title.\n') 
+            if (not author_writed) :
+                error_msg += _('Error when writing the author.\n')
+            dlg = wx.MessageDialog(self, error_msg, _('Error'),wx.OK | wx.ICON_ERROR )
+            dlg.ShowModal()
+            dlg.Destroy()
 
 if len(sys.argv) > 1:
     filepath = sys.argv[1]
