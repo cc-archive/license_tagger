@@ -40,7 +40,7 @@ class LicenseChooser(wx.Dialog):
             self.licenseURI = ''
             self.licenseName = ''
 
-        self.SetSize((500, 250))
+        self.SetSize((500, 235))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         #Sharing
@@ -107,7 +107,7 @@ class LicenseChooser(wx.Dialog):
 
         #Border
         border=wx.BoxSizer(wx.HORIZONTAL) 
-        border.Add(sizer, 1, wx.ALL, 15)
+        border.Add(sizer, 1, wx.ALL, 5)
 
         self.SetSizer(border)
 

@@ -13,8 +13,8 @@
 # represent and warrant to Creative Commons that your use
 # of the liblicense software will comply with the CC-GNU-LGPL.
 #
-# Copyright 2008, Creative Commons, www.creativecommons.org.
-# Copyright 2008, Steren Giannini
+# Copyright 2008-2009, Creative Commons, www.creativecommons.org.
+# Copyright 2008-2009, Steren Giannini
 
 import wx
 import os
@@ -107,7 +107,7 @@ class MyFileDropTarget(wx.FileDropTarget):
 
 class MainWindow(wx.Frame):
     def __init__(self, license):
-        super(MainWindow, self).__init__(None, size=(600,270))
+        super(MainWindow, self).__init__(None, size=(600,250))
         self.programname = _('License Tagger')
         self.license = license       
 
@@ -140,7 +140,7 @@ class MainWindow(wx.Frame):
         self.CreateSaveDoneButtons()
         #Border
         border=wx.BoxSizer(wx.HORIZONTAL) 
-        border.Add(self.sizer, 1, wx.ALL, 15)
+        border.Add(self.sizer, 1, wx.ALL, 5)
         self.SetSizer(border)      
 
     def CreateSaveDoneButtons(self):
@@ -272,17 +272,10 @@ class MainWindow(wx.Frame):
     def OnAbout(self, event):
         info = wx.AboutDialogInfo()
         info.Name = self.programname
-        info.Version = "0.1"
-        info.Copyright = "(C) 2008 Creative Commons"
+        info.Version = "1.0"
+        info.Copyright = "(C) 2009 Creative Commons"
         info.Description = wordwrap(
-            "A \"hello world\" program is a software program that prints out "
-            "\"Hello world!\" on a display device. It is used in many introductory "
-            "tutorials for teaching a programming language."
-            
-            "\n\nSuch a program is typically one of the simplest programs possible "
-            "in a computer language. A \"hello world\" program can be a useful "
-            "sanity test to make sure that a language's compiler, development "
-            "environment, and run-time environment are correctly installed.",
+            "Easily add license metadata into files.",
             350, wx.ClientDC(self))
         info.WebSite = ("http://wiki.creativecommons.org/License_tagger", self.programname + " home page")
         info.Developers = [ "Steren Giannini" ]
@@ -334,9 +327,8 @@ class MainWindow(wx.Frame):
             return self.license.GetLicenseName()
 
     def WriteLicenseData(self):
-        #TODO: when liblicense actually works for creator and title : do it   
         self.license.SetTitle( self.titleText.GetValue() )
-        liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #check LL_NAME ???
+        liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
         self.license.SetAuthor( self.authorText.GetValue() )
         liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
         liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
