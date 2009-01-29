@@ -163,7 +163,7 @@ class MainWindow(wx.Frame):
         licenseCell = wx.BoxSizer(wx.HORIZONTAL)
         self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
         licenseCell.Add(self.licenseText,3,wx.EXPAND)
-        self.editLicense=wx.Button(self, wx.ID_EDIT)
+        self.editLicense=wx.Button(self, wx.ID_EDIT) #"Creative Commons"
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
 
