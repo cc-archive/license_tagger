@@ -2,12 +2,16 @@ What needs to be done before the first public release of the License Tagger :
 Steren planned to take care of all these tasks, except for the last one.
 
 
-* Change the "edit" button to a "Use CC" button
+For the realease : 
 * License URI editable in the main window
 * support for jurisdictions (combo box + flag images in combo box)
+* Tooltips for attributes
 * UI : attribute images for chooser
 * UI : icon
 * support for title
 * license version in name
 * UI : icon rights near the name
 * packaging for linux, OSX and Windows.
+
+After :
+* Add a "Use CC" text on the CC BitmapButton.
