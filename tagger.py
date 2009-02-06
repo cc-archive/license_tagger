@@ -146,10 +146,12 @@ class MainWindow(wx.Frame):
     def CreateSaveDoneButtons(self):
         buttonsbox = wx.BoxSizer(wx.HORIZONTAL)
         exit=wx.Button(self, wx.ID_EXIT)
+        exit.SetToolTipString(_("Exit License Tagger."))
         exit.Bind(wx.EVT_BUTTON, self.OnExit)
         buttonsbox.Add(exit,2,wx.EXPAND)
         buttonsbox.Add((60, 20), 1, wx.EXPAND)
         self.save=wx.Button(self, wx.ID_SAVE)
+        self.save.SetToolTipString(_("Save the current license metadata."))
         self.save.Bind(wx.EVT_BUTTON, self.OnSave)
         buttonsbox.Add(self.save,2,wx.EXPAND)
         self.sizer.Add(buttonsbox,-1,wx.EXPAND)
@@ -164,6 +166,7 @@ class MainWindow(wx.Frame):
         self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
         licenseCell.Add(self.licenseText,3,wx.EXPAND)
         self.editLicense=wx.Button(self, wx.ID_EDIT) #"Creative Commons"
+        self.editLicense.SetToolTipString(_("Use a Creative Commons license for this file."))
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
 

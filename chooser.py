@@ -87,8 +87,10 @@ class LicenseChooser(wx.Dialog):
 
         btnsizer = wx.StdDialogButtonSizer()
         cancelbtn = wx.Button(self, wx.ID_CANCEL)
+        cancelbtn.SetToolTipString(_("Go back to the previous windows without saving your changes."))
         cancelbtn.Bind(wx.EVT_BUTTON, self.OnCancel)
         applybtn = wx.Button(self, wx.ID_OK)
+        applybtn.SetToolTipString(_("Select this Creative Commons license for the file."))
         applybtn.Bind(wx.EVT_BUTTON, self.OnApply)
         applybtn.SetDefault()
         btnsizer.AddButton(applybtn)
