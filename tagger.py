@@ -165,7 +165,11 @@ class MainWindow(wx.Frame):
         licenseCell = wx.BoxSizer(wx.HORIZONTAL)
         self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
         licenseCell.Add(self.licenseText,3,wx.EXPAND)
-        self.editLicense=wx.Button(self, wx.ID_EDIT) #"Creative Commons"
+
+        #TODO : BitmapButton WITH TEXT !
+        CC_bmp = wx.Bitmap("images/CC_button.png")
+        self.editLicense=wx.BitmapButton(self, -1, CC_bmp, (CC_bmp.GetWidth()+10, CC_bmp.GetHeight()+10))
+        #self.editLicense=wx.Button(self, label="Use CC")
         self.editLicense.SetToolTipString(_("Use a Creative Commons license for this file."))
         self.editLicense.Bind(wx.EVT_BUTTON, self.OnEdit)
         licenseCell.Add(self.editLicense,1,wx.EXPAND)
