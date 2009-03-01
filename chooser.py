@@ -35,7 +35,7 @@ class LicenseChooser(wx.Dialog):
 
         if self.license.GetLicense():
             self.licenseURI = self.license.GetLicense()
-            self.licenseName = self.license.GetLicenseName()
+            self.licenseName = self.license.GetLicenseNameString()
         else:
             self.licenseURI = ''
             self.licenseName = ''

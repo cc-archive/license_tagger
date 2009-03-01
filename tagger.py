@@ -65,7 +65,7 @@ class License():
         self.title = title    
     def GetLicense(self):
         return self.license
-    def GetLicenseName(self):
+    def GetLicenseNameString(self):
         """
         This method returns:
         - the license name if possible
@@ -78,12 +78,12 @@ class License():
             return liblicense.get_name(self.GetLicense())
         else :
             return self.GetLicense()
-    def GetAuthorName(self):
+    def GetAuthorString(self):
         if self.author == None :
             return ''
         else :
             return self.author
-    def GetTitleName(self):
+    def GetTitleString(self):
         if self.title == None :
             return ''
         else :
@@ -164,7 +164,7 @@ class MainWindow(wx.Frame):
 
         licenseCell = wx.BoxSizer(wx.HORIZONTAL)
         licenseNameAndURI = wx.BoxSizer(wx.VERTICAL)
-        self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
+        self.licenseText = wx.StaticText(self, -1, self.GetLicenseNameString())
         licenseNameAndURI.Add(self.licenseText,3,wx.EXPAND)
         self.licenseURITextCtrl = wx.TextCtrl(self, -1, "TODO change me")
         licenseNameAndURI.Add(self.licenseURITextCtrl,3,wx.EXPAND)
@@ -186,13 +186,13 @@ class MainWindow(wx.Frame):
 
         titleLine = wx.BoxSizer(wx.HORIZONTAL)
         titleLine.Add(wx.StaticText(self, -1, _("Title:")),1,wx.EXPAND)
-        self.titleText = wx.TextCtrl(self, -1, self.license.GetTitleName())
+        self.titleText = wx.TextCtrl(self, -1, self.license.GetTitleString())
         titleLine.Add(self.titleText,3,wx.EXPAND)
         licenseInfoBox.Add(titleLine,0,wx.EXPAND)
 
         authorLine = wx.BoxSizer(wx.HORIZONTAL)
         authorLine.Add(wx.StaticText(self, -1, _("Author:")),1,wx.EXPAND)
-        self.authorText = wx.TextCtrl(self, -1, self.license.GetAuthorName())
+        self.authorText = wx.TextCtrl(self, -1, self.license.GetAuthorString())
         authorLine.Add(self.authorText,3,wx.EXPAND)
         licenseInfoBox.Add(authorLine,0,wx.EXPAND)
         self.sizer.Add(licenseInfoBox,0,wx.EXPAND)
@@ -240,7 +240,7 @@ class MainWindow(wx.Frame):
 
     def UpdateLicenseBox(self):
         self.fileNameText.SetLabel(self.filename)
-        self.licenseText.SetLabel(self.GetLicenseName())
+        self.licenseText.SetLabel(self.GetLicenseNameString())
         if self.filename :
             self.editLicense.Enable(True)
             self.save.Enable(True)
@@ -255,8 +255,8 @@ class MainWindow(wx.Frame):
             self.fileMenu.Enable(wx.ID_SAVEAS, False)
             self.titleText.Enable(False)
             self.authorText.Enable(False)
-        self.titleText.SetValue(self.license.GetTitleName())
-        self.authorText.SetValue(self.license.GetAuthorName())
+        self.titleText.SetValue(self.license.GetTitleString())
+        self.authorText.SetValue(self.license.GetAuthorString())
 
     def defaultFileDialogOptions(self):
         ''' Return a dictionary with file dialog options that can be
@@ -325,7 +325,7 @@ class MainWindow(wx.Frame):
         self.license.SetAuthor( liblicense.read(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR) )
         self.license.SetTitle( liblicense.read(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title') )
 
-    def GetLicenseName(self):
+    def GetLicenseNameString(self):
         """
         This method returns:
         - the license name if possible
@@ -336,15 +336,15 @@ class MainWindow(wx.Frame):
         if self.filename == '':
             return ''
         else :
-            return self.license.GetLicenseName()
+            return self.license.GetLicenseNameString()
 
     def WriteLicenseData(self):
         title_ok = True
-        if not self.titleText.GetValue() == self.license.GetTitleName() :
+        if not self.titleText.GetValue() == self.license.GetTitleString() :
             self.license.SetTitle( self.titleText.GetValue() )
             title_ok = liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
         author_ok = True
-        if not self.authorText.GetValue() == self.license.GetAuthorName() :
+        if not self.authorText.GetValue() == self.license.GetAuthorString() :
             self.license.SetAuthor( self.authorText.GetValue() )
             author_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
         license_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
