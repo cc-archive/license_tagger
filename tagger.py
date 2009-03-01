@@ -172,6 +172,7 @@ class MainWindow(wx.Frame):
         self.licenseNameText = wx.StaticText(self, -1, self.GetLicenseNameString())
         licenseNameAndURI.Add(self.licenseNameText,3,wx.EXPAND)
         self.licenseURITextCtrl = wx.TextCtrl(self, -1, self.license.GetLicenseURIString())
+        self.licenseURITextCtrl.Bind(wx.EVT_TEXT, self.OnURIChanged)
         licenseNameAndURI.Add(self.licenseURITextCtrl,3,wx.EXPAND)
         licenseCell.Add(licenseNameAndURI,3,wx.EXPAND)
 
@@ -266,6 +267,9 @@ class MainWindow(wx.Frame):
         self.titleText.SetValue(self.license.GetTitleString())
         self.authorText.SetValue(self.license.GetAuthorString())
 
+    def UpdateLicenseName(self):
+        self.licenseNameText.SetLabel(self.GetLicenseNameString())
+
     def defaultFileDialogOptions(self):
         ''' Return a dictionary with file dialog options that can be
             used in both the save file dialog as well as in the open
@@ -327,6 +331,10 @@ class MainWindow(wx.Frame):
             self.ReadInfo()
             self.UpdateLicenseBox()
             self.SetStatusText("")
+
+    def OnURIChanged(self,event):
+        self.license.SetLicenseURI(event.GetString())
+        self.UpdateLicenseName()
 
     def ReadInfo(self):
         self.license.SetLicenseURI( liblicense.read(os.path.join(self.dirname, self.filename)) )
