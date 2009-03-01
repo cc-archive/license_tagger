@@ -253,6 +253,7 @@ class MainWindow(wx.Frame):
             self.fileMenu.Enable(wx.ID_SAVEAS, True)
             self.titleText.Enable(True)
             self.authorText.Enable(True)
+            self.licenseURITextCtrl.Enable(True)
         else :
             self.editLicense.Enable(False)
             self.save.Enable(False)
@@ -260,6 +261,7 @@ class MainWindow(wx.Frame):
             self.fileMenu.Enable(wx.ID_SAVEAS, False)
             self.titleText.Enable(False)
             self.authorText.Enable(False)
+            self.licenseURITextCtrl.Enable(False)
         self.titleText.SetValue(self.license.GetTitleString())
         self.authorText.SetValue(self.license.GetAuthorString())
 
