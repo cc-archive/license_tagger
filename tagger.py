@@ -53,18 +53,18 @@ publisherlicenseText = "GNUGPL v2 or later TODO"
 
 class License():
     def __init__(self):
-        self.license = None
+        self.licenseURI = None
         self.author = None
         self.title = None
 
     def SetLicense(self, license):
-        self.license = license        
+        self.licenseURI = license        
     def SetAuthor(self, author):
         self.author = author       
     def SetTitle(self, title):
         self.title = title    
-    def GetLicense(self):
-        return self.license
+    def GetLicenseURI(self):
+        return self.licenseURI
     def GetLicenseNameString(self):
         """
         This method returns:
@@ -72,12 +72,12 @@ class License():
         - the license url if the name can't be found
         - (unlicensed) if no license info
         """
-        if self.GetLicense() == None:
+        if self.GetLicenseURI() == None:
             return _('(unlicensed)')
-        elif liblicense.get_name(self.GetLicense()) != None:
-            return liblicense.get_name(self.GetLicense())
+        elif liblicense.get_name(self.GetLicenseURI()) != None:
+            return liblicense.get_name(self.GetLicenseURI())
         else :
-            return self.GetLicense()
+            return self.GetLicenseURI()
     def GetAuthorString(self):
         if self.author == None :
             return ''
@@ -347,7 +347,7 @@ class MainWindow(wx.Frame):
         if not self.authorText.GetValue() == self.license.GetAuthorString() :
             self.license.SetAuthor( self.authorText.GetValue() )
             author_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
-        license_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
+        license_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicenseURI())
         if (title_ok and author_ok and license_ok) == False :
             error_msg = _('Problem to write into the file ') + self.filename + ' :\n'
             if (not license_ok) :
