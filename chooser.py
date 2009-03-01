@@ -33,8 +33,8 @@ class LicenseChooser(wx.Dialog):
 
         self.license = license
 
-        if self.license.GetLicense():
-            self.licenseURI = self.license.GetLicense()
+        if self.license.GetLicenseURI():
+            self.licenseURI = self.license.GetLicenseURI()
             self.licenseName = self.license.GetLicenseNameString()
         else:
             self.licenseURI = ''
@@ -126,7 +126,7 @@ class LicenseChooser(wx.Dialog):
         self.UpdateCheckboxes(self.licenseURI)
 
     def OnApply(self, event):
-        self.license.SetLicense(self.licenseURIText.GetValue())
+        self.license.SetLicenseURI(self.licenseURIText.GetValue())
         self.Destroy()
 
     def OnCancel(self, event):

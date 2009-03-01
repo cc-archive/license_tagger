@@ -57,7 +57,7 @@ class License():
         self.author = None
         self.title = None
 
-    def SetLicense(self, license):
+    def SetLicenseURI(self, license):
         self.licenseURI = license        
     def SetAuthor(self, author):
         self.author = author       
@@ -120,7 +120,7 @@ class MainWindow(wx.Frame):
         else :
             self.dirname = '.'
             self.filename = ''
-            self.license.SetLicense(None)
+            self.license.SetLicenseURI(None)
             self.license.SetAuthor(None)
             self.license.SetTitle(None)
 
@@ -321,7 +321,7 @@ class MainWindow(wx.Frame):
             self.SetStatusText("")
 
     def ReadInfo(self):
-        self.license.SetLicense( liblicense.read(os.path.join(self.dirname, self.filename)) )
+        self.license.SetLicenseURI( liblicense.read(os.path.join(self.dirname, self.filename)) )
         self.license.SetAuthor( liblicense.read(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR) )
         self.license.SetTitle( liblicense.read(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title') )
 
