@@ -107,7 +107,7 @@ class MyFileDropTarget(wx.FileDropTarget):
 
 class MainWindow(wx.Frame):
     def __init__(self, license):
-        super(MainWindow, self).__init__(None, size=(600,250))
+        super(MainWindow, self).__init__(None, size=(600,280))
         self.programname = _('License Tagger')
         self.license = license       
 
@@ -163,8 +163,12 @@ class MainWindow(wx.Frame):
         licenseInfoBox.Add(self.fileNameText,-1,wx.EXPAND)
 
         licenseCell = wx.BoxSizer(wx.HORIZONTAL)
+        licenseNameAndURI = wx.BoxSizer(wx.VERTICAL)
         self.licenseText = wx.StaticText(self, -1, self.GetLicenseName())
-        licenseCell.Add(self.licenseText,3,wx.EXPAND)
+        licenseNameAndURI.Add(self.licenseText,3,wx.EXPAND)
+        self.licenseURITextCtrl = wx.TextCtrl(self, -1, "TODO change me")
+        licenseNameAndURI.Add(self.licenseURITextCtrl,3,wx.EXPAND)
+        licenseCell.Add(licenseNameAndURI,3,wx.EXPAND)
 
         #TODO : BitmapButton WITH TEXT !
         CC_bmp = wx.Bitmap("images/CC_button.png")
