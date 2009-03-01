@@ -31,11 +31,12 @@ class LicenseChooser(wx.Dialog):
     def __init__(self, parent, license):
         wx.Dialog.__init__(self,parent, -1, _('Choose your license'))
 
-        self.license = license
-
-
+        self.license = license  
         self.licenseURI = self.license.GetLicenseURIString()
-        self.licenseName = self.license.GetLicenseNameString()
+        if liblicense.get_name(self.licenseURI) :
+            self.licenseName = self.license.GetLicenseNameString()
+        else :
+            self.licenseName = ''
 
         self.SetSize((500, 235))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
@@ -49,6 +50,7 @@ class LicenseChooser(wx.Dialog):
         #Attribution
         byLine = wx.BoxSizer(wx.HORIZONTAL)
         self.cb_by = wx.CheckBox(self, -1, _("Require Attribution"))
+        self.cb_by.Enable(False)
         byLine.Add(self.cb_by,1,wx.EXPAND)
         self.cb_by.Bind(wx.EVT_CHECKBOX, self.OnCheck_by )
 
@@ -120,7 +122,7 @@ class LicenseChooser(wx.Dialog):
         self.ll_chooser = liblicense.LicenseChooser(None,self.attributes)
 
         #We check/uncheck the checkboxes considering the license
-        self.UpdateCheckboxes(self.licenseURI)
+        self.UpdateCheckboxes()
 
     def OnApply(self, event):
         self.license.SetLicenseURI(self.licenseURIText.GetValue())
@@ -132,11 +134,8 @@ class LicenseChooser(wx.Dialog):
     def OnCloseWindow(self, event):
         self.Destroy()
 
-    def UpdateCheckboxes(self,license):
-        if license:
-            self.current_flags= list(self.license_flags(license))
-        else:
-            self.current_flags=[False,False,False,False,False]
+    def UpdateCheckboxes(self):
+        self.current_flags= list(self.LicenseFlags(self.licenseURI))
         self.cb_by.SetValue(self.current_flags[0])
         self.cb_ash.SetValue(self.current_flags[1])
         self.cb_ar.SetValue(self.current_flags[2])
@@ -146,7 +145,6 @@ class LicenseChooser(wx.Dialog):
 
 
     def CheckForDisabledCheckboxes(self):
-        #If "Allow Remixing" is false, then "Share Alike" is False and deactivated.
         if not self.current_flags[1]:
             self.cb_by.Enable(False)
             self.cb_by.SetValue(False)            
@@ -157,18 +155,19 @@ class LicenseChooser(wx.Dialog):
             self.cb_sa.Enable(False)
             self.cb_sa.SetValue(False)   
         else:
-            self.cb_by.Enable(True)          
+            self.cb_by.Enable(False)          
             self.cb_ar.Enable(True)
             self.cb_pcw.Enable(True)
             self.cb_sa.Enable(True)
 
+        #If "Allow Remixing" is false, then "Share Alike" is False and deactivated.
         if self.current_flags[2]:
             self.cb_sa.Enable(True)
         else:
             self.cb_sa.Enable(False)
 
 
-    def license_flags(self,license):
+    def LicenseFlags(self,license):
         """
         Returns the CC flags of a given license. (compares attributes to permits/requires/prohibits)
         """
@@ -182,10 +181,13 @@ class LicenseChooser(wx.Dialog):
                 self.attributes[4] in requires)
 
     def OnCheck_by(self,event):
-        self.OnCheckBox(event, 0)
+        return True
 
     def OnCheck_ash(self,event):
+        #if we allow sharing, we require attribution (this is for all the CC licenses)
+        self.cb_by.SetValue(True)  
         self.OnCheckBox(event, 1)
+        self.OnCheckBox(event, 0)
 
     def OnCheck_ar(self,event):
         self.OnCheckBox(event, 2)
@@ -206,7 +208,7 @@ class LicenseChooser(wx.Dialog):
     def OnURIChanged(self,event):
         self.licenseURI = event.GetString()
         self.UpdateLicenseName()
-        self.UpdateCheckboxes(self.licenseURI)
+        self.UpdateCheckboxes()
 
     def UpdateLicenseName(self):
         newname = liblicense.get_name(self.licenseURI)
@@ -242,8 +244,4 @@ class LicenseChooser(wx.Dialog):
         else :
             self.licenseURI = ''
             self.licenseURIText.SetValue('')
-
-
-    def GetNewLicense(self):
-        return self.license
 

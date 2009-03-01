@@ -3,7 +3,6 @@ Steren planned to take care of all these tasks, except for the last one.
 
 
 For the realease : 
-* remove sharing and attribution from editable checkboxes
 * support for jurisdictions (combo box + flag images in combo box)
 * Tooltips for attributes
 * UI : attribute images for chooser
