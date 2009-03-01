@@ -335,18 +335,22 @@ class MainWindow(wx.Frame):
             return self.license.GetLicenseName()
 
     def WriteLicenseData(self):
-        self.license.SetTitle( self.titleText.GetValue() )
-        title_writed = liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
-        self.license.SetAuthor( self.authorText.GetValue() )
-        author_writed = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
-        license_writed = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
-        if (title_writed and author_writed and license_writed) == False :
+        title_ok = True
+        if not self.titleText.GetValue() == self.license.GetTitleName() :
+            self.license.SetTitle( self.titleText.GetValue() )
+            title_ok = liblicense.write(os.path.join(self.dirname, self.filename), 'http://purl.org/dc/elements/1.1/title', self.license.GetTitleName() )  #LL_NAME ???
+        author_ok = True
+        if not self.authorText.GetValue() == self.license.GetAuthorName() :
+            self.license.SetAuthor( self.authorText.GetValue() )
+            author_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_CREATOR, self.license.GetAuthorName() )
+        license_ok = liblicense.write(os.path.join(self.dirname, self.filename), liblicense.LL_LICENSE, self.license.GetLicense())
+        if (title_ok and author_ok and license_ok) == False :
             error_msg = _('Problem to write into the file ') + self.filename + ' :\n'
-            if (not license_writed) :
+            if (not license_ok) :
                 error_msg += _('Error when writing the license.\n') 
-            if (not title_writed) :
+            if (not title_ok) :
                 error_msg += _('Error when writing the title.\n') 
-            if (not author_writed) :
+            if (not author_ok) :
                 error_msg += _('Error when writing the author.\n')
             dlg = wx.MessageDialog(self, error_msg, _('Error'),wx.OK | wx.ICON_ERROR )
             dlg.ShowModal()
