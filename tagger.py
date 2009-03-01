@@ -169,9 +169,9 @@ class MainWindow(wx.Frame):
 
         licenseCell = wx.BoxSizer(wx.HORIZONTAL)
         licenseNameAndURI = wx.BoxSizer(wx.VERTICAL)
-        self.licenseText = wx.StaticText(self, -1, self.GetLicenseNameString())
-        licenseNameAndURI.Add(self.licenseText,3,wx.EXPAND)
-        self.licenseURITextCtrl = wx.TextCtrl(self, -1, "TODO change me")
+        self.licenseNameText = wx.StaticText(self, -1, self.GetLicenseNameString())
+        licenseNameAndURI.Add(self.licenseNameText,3,wx.EXPAND)
+        self.licenseURITextCtrl = wx.TextCtrl(self, -1, self.license.GetLicenseURIString())
         licenseNameAndURI.Add(self.licenseURITextCtrl,3,wx.EXPAND)
         licenseCell.Add(licenseNameAndURI,3,wx.EXPAND)
 
@@ -245,7 +245,8 @@ class MainWindow(wx.Frame):
 
     def UpdateLicenseBox(self):
         self.fileNameText.SetLabel(self.filename)
-        self.licenseText.SetLabel(self.GetLicenseNameString())
+        self.licenseNameText.SetLabel(self.GetLicenseNameString())
+        self.licenseURITextCtrl.SetValue(self.license.GetLicenseURIString())
         if self.filename :
             self.editLicense.Enable(True)
             self.save.Enable(True)
