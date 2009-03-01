@@ -65,6 +65,11 @@ class License():
         self.title = title    
     def GetLicenseURI(self):
         return self.licenseURI
+    def GetLicenseURIString(self):
+        if self.GetLicenseURI() == None :
+            return ''
+        else :
+            return self.GetLicenseURI()
     def GetLicenseNameString(self):
         """
         This method returns:
@@ -77,7 +82,7 @@ class License():
         elif liblicense.get_name(self.GetLicenseURI()) != None:
             return liblicense.get_name(self.GetLicenseURI())
         else :
-            return self.GetLicenseURI()
+            return self.GetLicenseURIString()
     def GetAuthorString(self):
         if self.author == None :
             return ''

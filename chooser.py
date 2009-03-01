@@ -33,12 +33,9 @@ class LicenseChooser(wx.Dialog):
 
         self.license = license
 
-        if self.license.GetLicenseURI():
-            self.licenseURI = self.license.GetLicenseURI()
-            self.licenseName = self.license.GetLicenseNameString()
-        else:
-            self.licenseURI = ''
-            self.licenseName = ''
+
+        self.licenseURI = self.license.GetLicenseURIString()
+        self.licenseName = self.license.GetLicenseNameString()
 
         self.SetSize((500, 235))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
