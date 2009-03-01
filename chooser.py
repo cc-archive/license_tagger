@@ -12,8 +12,8 @@
 # represent and warrant to Creative Commons that your use
 # of the liblicense software will comply with the CC-GNU-LGPL.
 #
-# Copyright 2008, Creative Commons, www.creativecommons.org.
-# Copyright 2008, Steren Giannini
+# Copyright 2008-2009, Creative Commons, www.creativecommons.org.
+# Copyright 2008-2009, Steren Giannini
 # Copyright 2007, Scott Shawcroft. (portion of this code is based on Scott's work)
 
 import wx
